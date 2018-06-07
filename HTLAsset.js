@@ -13,6 +13,9 @@ const JSAsset = require('parcel-bundler/src/assets/JSAsset');
 const fs = require("fs");
 const path = require('path');
 
+/*
+ * Overriding the compile method so that it does not spit out files 
+ */
 class TransientCompiler extends Compiler {
   compile(source, name) {
     // todo: async support
@@ -57,7 +60,7 @@ class HTLAsset extends JSAsset {
       .includeRuntime(true)
       .withRuntimeGlobalName("it");
 
-    this.contents = compiler.compile(code, "out.js");
+    this.contents = compiler.compile(code);
 
     return super.parse(this.contents);
   }
