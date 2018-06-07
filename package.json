@@ -9,7 +9,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "htlengine": "file:../htlengine",
+    "@adobe/htlengine": "1.0.0-SNAPSHOT.3026",
     "parcel-bundler": "^1.8.1"
   }
 }

@@ -1,12 +1,12 @@
 const { Asset } = require("parcel-bundler");
-const htl = require("htlengine");
-const Compiler = require("htlengine/src/compiler/Compiler");
-const TemplateParser = require('htlengine/src/parser/html/TemplateParser');
-const ThrowingErrorListener = require('htlengine/src/parser/htl/ThrowingErrorListener');
-const JSCodeGenVisitor = require('htlengine/src/compiler/JSCodeGenVisitor');
+const htl = require("@adobe/htlengine");
+const Compiler = require("@adobe/htlengine/src/compiler/Compiler");
+const TemplateParser = require('@adobe/htlengine/src/parser/html/TemplateParser');
+const ThrowingErrorListener = require('@adobe/htlengine/src/parser/htl/ThrowingErrorListener');
+const JSCodeGenVisitor = require('@adobe/htlengine/src/compiler/JSCodeGenVisitor');
 
-const DEFAULT_TEMPLATE = './node_modules/htlengine/src/compiler/JSCodeTemplate.js';
-const RUNTIME_TEMPLATE = './node_modules/htlengine/src/compiler/JSRuntimeTemplate.js';
+const DEFAULT_TEMPLATE = './node_modules/@adobe/htlengine/src/compiler/JSCodeTemplate.js';
+const RUNTIME_TEMPLATE = './node_modules/@adobe/htlengine/src/compiler/JSRuntimeTemplate.js';
 
 
 const JSAsset = require('parcel-bundler/src/assets/JSAsset');
