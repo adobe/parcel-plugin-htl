@@ -41,6 +41,7 @@ class TransientCompiler extends Compiler {
     let template = fs.readFileSync(path.join(__dirname, codeTemplate), 'utf-8');
     template = template.replace(/^\s*\/\/\s*RUNTIME_GLOBALS\s*$/m, global.join(''));
     template = template.replace(/^\s*\/\/\s*CODE\s*$/m, code);
+    // try to use local references for HTL Engine, so that parcel will pick it up
     //template = template.replace(/htlengine\/src\/runtime\/Runtime/, '../node_modules/htlengine/src/runtime/Runtime');
 
     return template;
