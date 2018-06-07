@@ -1,0 +1,17 @@
+{
+  "name": "it-parcel-plugin-htl",
+  "version": "1.0.0",
+  "description": "Integration Tests for Parcel Plugin HTL",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run build",
+    "build": "parcel build src/*.htl --global module.exports.main --target node --no-cache --no-minify"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "parcel-bundler": "^1.8.1",
+    "@adobe/parcel-plugin-htl": "file:../../",
+    "htlengine": "file:../../../htlengine"
+  }
+}
