@@ -10,7 +10,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@adobe/htlengine": "adobe/htlengine#transient-compiler",
+    "@adobe/htlengine": "^1.0.2-SNAPSHOT.26",
     "parcel-bundler": "^1.9.2"
   }
 }
