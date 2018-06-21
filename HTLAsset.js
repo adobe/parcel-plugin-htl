@@ -17,7 +17,7 @@ class HTLAsset extends JSAsset {
       .includeRuntime(true)
       .withRuntimeGlobalName("it");
 
-    this.contents = compiler.compileTransient(code);
+    this.contents = compiler.compileToString(code);
 
     return super.parse(this.contents);
   }
