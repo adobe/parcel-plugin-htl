@@ -1,1 +1,3 @@
-node_modules
+/test/integration/node_modules/@adobe/hypertext-pipeline/node_modules
+/test/integration/node_modules/@adobe/hypertext-pipeline/*.log
+/node_modules
