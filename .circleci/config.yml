@@ -28,19 +28,19 @@ jobs:
 
       - run: npm run lint
 
-#      # run tests!
-#      - run: mkdir junit
-#      - run:
-#          name: Running Tests
-#          command: npx mocha test --reporter mocha-junit-reporter
-#          environment:
-#            MOCHA_FILE: junit/test-results.xml
-#          when: always
+      # run tests!
+      - run:
+          name: Running Tests
+          command: npm install && mkdir junit && npx mocha test --reporter mocha-junit-reporter
+          working_directory: test/integration
+          environment:
+            MOCHA_FILE: junit/test-results.xml
+          when: always
 
       - store_test_results:
-          path: junit
+          path: test/integration/junit
       - store_artifacts:
-          path: junit 
+          path: test/integration/junit 
 
   publish-snapshot:
     docker:
