@@ -19,7 +19,7 @@ jobs:
 
       - run: 
           name: Install Dependencies
-          command: npm install && npm install mocha-junit-reporter npm-snapshot
+          command: npm install && npm install -D mocha-junit-reporter npm-snapshot
 
       - save_cache:
           paths:
@@ -60,7 +60,7 @@ jobs:
 
       - run: 
           name: Install Dependencies
-          command: npm install && npm install mocha-junit-reporter npm-snapshot
+          command: npm install && npm install -D mocha-junit-reporter npm-snapshot
 
       - save_cache:
           paths:
