@@ -6,6 +6,8 @@ jobs:
       # specify the version you desire here
       # using the clojurescript image because it has node, java, antlr and the openwhisk tools
       - image: circleci/node:8
+        environment:
+            NPM_CONFIG_PREFIX: "~/.npm-global"
 
     working_directory: ~/repo
 
@@ -26,12 +28,21 @@ jobs:
             - node_modules
           key: v3-dependencies-{{ checksum "package.json" }}
 
+      - run: mkdir ~/.npm-global
+
       - run: npm run lint
+
+
+      # run tests!
+      - run:
+          name: Install Dependency
+          command: npm install && npm link
+          working_directory: hypermedia-pipeline
 
       # run tests!
       - run:
           name: Running Tests
-          command: npm install && mkdir junit && npx mocha test --reporter mocha-junit-reporter
+          command: npm install && npm link @adobe/hypermedia-pipeline && mkdir junit && npx mocha test --reporter mocha-junit-reporter
           working_directory: test/integration
           environment:
             MOCHA_FILE: junit/test-results.xml
