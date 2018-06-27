@@ -39,8 +39,8 @@ class HTLAsset extends JSAsset {
       .slice(0, -2)
       .join('.');
 
-    const pipe = this.getPreprocessor(`${rootname}.pipe.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`, selector);
-    const pre = this.getPreprocessor(`${rootname}.pre.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`, selector);
+    const pipe = HTLAsset.getPreprocessor(`${rootname}.pipe.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`, selector);
+    const pre = HTLAsset.getPreprocessor(`${rootname}.pre.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`, selector);
 
 
     // return super.parse(this.contents);
