@@ -68,11 +68,13 @@ describe('Testing html.htl Pipeline', () => {
   it('Script can be executed', (done) => {
     const result = script.main(params);
     assert.ok(result);
-    result.then((res) => {
-      assert.ok(res);
-      assert.ok(res.body);
-      assert.ok(res.body.match(/Welcome/));
-      done();
-    });
+    result
+      .then((res) => {
+        assert.ok(res);
+        assert.ok(res.body);
+        assert.ok(res.body.match(/Welcome/));
+        done();
+      })
+      .catch((e) => { assert.fail(e); done(); });
   });
 });
