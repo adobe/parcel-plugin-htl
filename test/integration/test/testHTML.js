@@ -14,7 +14,7 @@ describe("Testing html.htl Pipeline", () => {
         assert.equal(typeof script.main, "function");
     });
 
-    it("Script has can be executed", (done) => {
+    it("Script can be executed", (done) => {
         const result = script.main(params);
         assert.ok(result);
         result.then((res) => {
