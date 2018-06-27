@@ -2,7 +2,8 @@ const Compiler = require("@adobe/htlengine/src/compiler/Compiler");
 
 const JSAsset = require("parcel-bundler/src/assets/JSAsset");
 const fs = require("fs");
-const path = require("path");
+
+const pipeline = require("@adobe/hypermedia-pipeline");
 
 class HTLAsset extends JSAsset {
     constructor(name, options) {
@@ -29,8 +30,8 @@ class HTLAsset extends JSAsset {
             .slice(0, -2)
             .join(".");
 
-        const pipe = this.getPreprocessor(`${rootname}.pipe.js`, `@adobe/hypertext-pipeline/src/defaults/${extension}.pipe.js`);
-        const pre  = this.getPreprocessor(`${rootname}.pre.js` , `@adobe/hypertext-pipeline/src/defaults/${extension}.pre.js`);
+        const pipe = this.getPreprocessor(`${rootname}.pipe.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`);
+        const pre  = this.getPreprocessor(`${rootname}.pre.js` , `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`);
     
             
         //return super.parse(this.contents);
@@ -54,13 +55,12 @@ class HTLAsset extends JSAsset {
         } else {
             try {
                 if (require.resolve(fallback)) {
+                    console.log(fallback);
                     return fallback;
                 }
-            } catch (e) {
-                //console.log(e);
-            }
+            } catch (e) {}
         }
-        return '@adobe/hypertext-pipeline/src/defaults/default.js';
+        return '@adobe/hypermedia-pipeline/src/defaults/default.js';
     }
 }
 

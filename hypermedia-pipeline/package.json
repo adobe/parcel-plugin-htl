@@ -1,5 +1,5 @@
 {
-  "name": "hypertext-pipeline",
+  "name": "@adobe/hypermedia-pipeline",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
