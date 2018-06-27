@@ -42,7 +42,11 @@ class HTLAsset extends JSAsset {
             const main = module.exports.main;
             const { pre } = require('${pre}');
             //this gets called by openwhisk
-            module.exports.main = pipe(pre(main));
+            module.exports.main = pipe(pre(function(args) {
+                return main(args).then(result => {
+                    return { response: result };
+                });
+            }));
         `;
         return super.parse(body);
     }
