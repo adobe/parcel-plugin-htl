@@ -17,16 +17,11 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}
+            - v3-dependencies-{{ checksum "package.json" }}-{{ checksum test/integration/package.json }}
 
       - run: 
           name: Install Dependencies
           command: npm install && npm install -D mocha-junit-reporter npm-snapshot
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}
 
       - run: mkdir -p ~/.npm-global
 
@@ -41,6 +36,12 @@ jobs:
             MOCHA_FILE: junit/test-results.xml
           when: always
 
+      - save_cache:
+          paths:
+            - node_modules
+            - test/integration/node_modules
+          key: v3-dependencies-{{ checksum "package.json" }}-{{ checksum test/integration/package.json }}
+          
       - store_test_results:
           path: test/integration/junit
       - store_artifacts:
