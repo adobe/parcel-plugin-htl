@@ -32,19 +32,10 @@ jobs:
 
       - run: npm run lint
 
-
-      # run tests!
-      - run:
-          name: Install Dependency
-          command: npm install && npm link
-          working_directory: hypermedia-pipeline
-
-      - run: npm link @adobe/hypermedia-pipeline
-
       # run tests!
       - run:
           name: Running Tests
-          command: npm install npm install -D mocha-junit-reporter && npm link @adobe/hypermedia-pipeline && mkdir junit && npx mocha test --reporter mocha-junit-reporter
+          command: npm install npm install -D mocha-junit-reporter && mkdir junit && npx mocha test --reporter mocha-junit-reporter
           working_directory: test/integration
           environment:
             MOCHA_FILE: junit/test-results.xml

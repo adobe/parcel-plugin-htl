@@ -22,6 +22,7 @@
     "eslint-plugin-react": "^7.9.1"
   },
   "dependencies": {
+    "@adobe/hypermedia-pipeline": "0.1.0-SNAPSHOT.16",
     "winston": "^3.0.0"
   }
 }

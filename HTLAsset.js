@@ -9,42 +9,49 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
+const Compiler = require("@adobe/htlengine/src/compiler/Compiler");
 
-const JSAsset = require('parcel-bundler/src/assets/JSAsset');
-const fs = require('fs');
-const path = require('path');
+const JSAsset = require("parcel-bundler/src/assets/JSAsset");
+const fs = require("fs");
+const path = require("path");
 
-const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
+const DEFAULT_PIPELINE = "@adobe/hypermedia-pipeline/src/defaults/default.js";
 
 class HTLAsset extends JSAsset {
   constructor(name, options) {
     super(name, options);
-    this.type = 'js';
+    this.type = "js";
   }
 
   async parse(code) {
     // TODO
     const compiler = new Compiler()
-      .withOutputDirectory('')
+      .withOutputDirectory("")
       .includeRuntime(true)
-      .withRuntimeGlobalName('it');
+      .withRuntimeGlobalName("it");
 
     this.contents = compiler.compileToString(code);
 
-    const rootname = this.name.replace(/\.[^.]+$/, '');
+    const rootname = this.name.replace(/\.[^.]+$/, "");
     const extension = this.basename
-      .split('.')
+      .split(".")
       .slice(-2, -1)
       .pop();
     const selector = this.basename
-      .split('.')
+      .split(".")
       .slice(0, -2)
-      .join('.');
+      .join(".");
 
-    const pipe = HTLAsset.getPreprocessor(`${rootname}.pipe.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`, selector);
-    const pre = HTLAsset.getPreprocessor(`${rootname}.pre.js`, `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`, selector);
-
+    const pipe = HTLAsset.getPreprocessor(
+      `${rootname}.pipe.js`,
+      `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`,
+      selector
+    );
+    const pre = HTLAsset.getPreprocessor(
+      `${rootname}.pre.js`,
+      `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`,
+      selector
+    );
 
     // return super.parse(this.contents);
     const body = `
@@ -65,7 +72,7 @@ class HTLAsset extends JSAsset {
 
   static getPreprocessor(name, fallback) {
     if (fs.existsSync(name)) {
-                name.replace(/^.*\//g, './');
+      const relname = name.replace(/^.*\//g, "./");
       return relname;
     }
     try {
