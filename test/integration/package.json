@@ -4,13 +4,26 @@
   "description": "Integration Tests for Parcel Plugin HTL",
   "main": "index.js",
   "scripts": {
-    "test": "npm run build",
-    "build": "parcel build src/*.htl --global module.exports.main --target node --no-cache --no-minify"
+    "test": "npm run build && mocha",
+    "build": "parcel build src/*.htl --global module.exports.main --target node --no-cache --no-minify",
+    "lint": "npx eslint test"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
     "@adobe/parcel-plugin-htl": "file:../../",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-header": "^1.2.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
+    "mocha": "^5.2.0",
+    "mocha-junit-reporter": "^1.17.0",
     "parcel-bundler": "^1.9.2"
+  },
+  "dependencies": {
+    "@adobe/hypermedia-pipeline": "0.1.0-SNAPSHOT.16",
+    "winston": "^3.0.0"
   }
 }

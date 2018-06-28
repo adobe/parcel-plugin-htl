@@ -9,7 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-module.exports = (bundler) => {
-  // process HTL files by .htl extension
-  bundler.addAssetType('htl', require.resolve('./HTLAsset'));
+function foo() {
+  return 'bar';
+}
+
+module.exports.pre = function (args) {
+  return args;
 };
