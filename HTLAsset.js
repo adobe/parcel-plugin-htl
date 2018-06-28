@@ -13,6 +13,9 @@ const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
 const JSAsset = require('parcel-bundler/src/assets/JSAsset');
 const fs = require('fs');
+const path = require('path');
+
+const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
 class HTLAsset extends JSAsset {
   constructor(name, options) {
@@ -62,7 +65,6 @@ class HTLAsset extends JSAsset {
 
   static getPreprocessor(name, fallback) {
     if (fs.existsSync(name)) {
-      const relname =
                 name.replace(/^.*\//g, './');
       return relname;
     }
@@ -71,10 +73,10 @@ class HTLAsset extends JSAsset {
         return fallback;
       }
     } catch (e) {
-      return '@adobe/hypermedia-pipeline/src/defaults/default.js';
+      return DEFAULT_PIPELINE;
     }
 
-    return '@adobe/hypermedia-pipeline/src/defaults/default.js';
+    return DEFAULT_PIPELINE;
   }
 }
 
