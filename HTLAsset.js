@@ -13,6 +13,7 @@ const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
 const JSAsset = require('parcel-bundler/src/assets/JSAsset');
 const fs = require('fs');
+const path = require('path');
 
 const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
@@ -41,12 +42,12 @@ class HTLAsset extends JSAsset {
       .slice(0, -2)
       .join('.');
 
-    const pipe = HTLAsset.getPreprocessor(
+    const pipe = this.getPreprocessor(
       `${rootname}.pipe.js`,
       `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`,
       selector,
     );
-    const pre = HTLAsset.getPreprocessor(
+    const pre = this.getPreprocessor(
       `${rootname}.pre.js`,
       `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`,
       selector,
@@ -69,9 +70,11 @@ class HTLAsset extends JSAsset {
     return super.parse(body);
   }
 
-  static getPreprocessor(name, fallback) {
+  getPreprocessor(name, fallback) {
     if (fs.existsSync(name)) {
-      const relname = name.replace(/^.*\//g, './');
+      console.log('What is the relative path? ', name, this.name);
+      console.log('\n');
+      const relname = path.relative(this.name, name).substr(1);
       return relname;
     }
     try {
