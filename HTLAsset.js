@@ -60,12 +60,22 @@ class HTLAsset extends JSAsset {
             const { pipe } = require('${pipe}');
             const main = module.exports.main;
             const { pre } = require('${pre}');
+            const wrap = require('@adobe/openwhisk-loggly-wrapper');
             //this gets called by openwhisk
-            module.exports.main = pipe(pre(function(args) {
-                return main(args).then(result => {
-                    return { response: result };
-                });
-            }));
+
+            function getbody(params, secrets, logger) {
+              return main(params, secrets, logger).then(resobj => {
+                // htlengine puts the formatted html into the body property of the
+                // returned object, but the hypermedia pipeline expects it to be
+                // in the response.body object
+                return { response: resobj};
+              })
+              .catch(error => {
+                console.error('Whaaa?', error);
+              });
+            }
+
+            module.exports.main = (...args) => wrap(pipe(pre(getbody)), ...args);
         `;
     return super.parse(body);
   }

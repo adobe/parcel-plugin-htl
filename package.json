@@ -5,22 +5,27 @@
     "description": "Compiles HTL templates to JS functions",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "mocha test/unit",
         "lint": "npx eslint *.js"
     },
     "author": "",
     "license": "Apache-2.0",
     "dependencies": {
         "@adobe/htlengine": "^1.0.2-SNAPSHOT.26",
-        "@adobe/hypermedia-pipeline": "0.1.0-SNAPSHOT.16",
+        "@adobe/hypermedia-pipeline": "^0.2.0-SNAPSHOT.26",
+        "@adobe/openwhisk-loggly-wrapper": "^0.2.0-SNAPSHOT.25",
+        "logform": "^1.9.1",
         "parcel-bundler": "^1.9.2"
     },
     "devDependencies": {
         "eslint": "^4.19.1",
         "eslint-config-airbnb": "^16.1.0",
+        "eslint-plugin-header": "^1.2.0",
         "eslint-plugin-import": "^2.8.0",
         "eslint-plugin-jsx-a11y": "^6.0.3",
-        "eslint-plugin-header": "^1.2.0",
-        "eslint-plugin-react": "^7.9.1"
+        "eslint-plugin-react": "^7.9.1",
+        "mocha": "^5.2.0",
+        "mocha-junit-reporter": "^1.17.0",
+        "shelljs": "^0.8.2"
     }
 }

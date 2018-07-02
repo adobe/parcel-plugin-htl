@@ -18,6 +18,7 @@ describe('Testing html.htl Pipeline', () => {
     path: '/hello.md',
     __ow_method: 'get',
     owner: 'trieloff',
+    SECRET: '🎶 agent man',
     __ow_headers: {
       'X-Forwarded-Port': '443',
       'X-CDN-Request-Id': '2a208a89-e071-44cf-aee9-220880da4c1e',
@@ -70,11 +71,11 @@ describe('Testing html.htl Pipeline', () => {
     assert.ok(result);
     result
       .then((res) => {
-        assert.ok(res);
-        assert.ok(res.body);
-        assert.ok(res.body.match(/Welcome/));
+        assert.ok(res, 'no response received');
+        assert.ok(res.body, 'reponse has no body');
+        assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
         done();
       })
-      .catch((e) => { assert.fail(e); done(); });
+      .catch((e) => { console.error('Test FAILED'); assert.fail(e); done(); });
   });
 });
