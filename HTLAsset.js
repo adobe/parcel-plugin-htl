@@ -82,8 +82,6 @@ class HTLAsset extends JSAsset {
 
   getPreprocessor(name, fallback) {
     if (fs.existsSync(name)) {
-      console.log('What is the relative path? ', name, this.name);
-      console.log('\n');
       const relname = path.relative(this.name, name).substr(1);
       return relname;
     }

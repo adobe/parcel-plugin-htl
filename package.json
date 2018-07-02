@@ -1,6 +1,6 @@
 {
     "name": "@adobe/parcel-plugin-htl",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "repository": "https://github.com/adobe/parcel-plugin-htl",
     "description": "Compiles HTL templates to JS functions",
     "main": "index.js",
