@@ -64,43 +64,21 @@ class HTLAsset extends JSAsset {
             //this gets called by openwhisk
 
             function wrapped(params, secrets = {}, logger) {
-              console.log('# This is the first-level function');
-              console.log('- params: ', Object.keys(params));
-              console.log('- secrets:', Object.keys(secrets));
-              console.log('- logger: ', typeof logger);
-
               const runthis = (p, s, l) => {
-                console.log('## This is the ow-wrapped function');
-                console.log(' - p: ', Object.keys(p));
-                console.log(' - s:', Object.keys(s));
-                console.log(' - l: ', typeof l);
-
                 const next = (p, s, l) => {
-                  console.log('### This is the next function');
-                  console.log('  - p: ', Object.keys(p));
-                  console.log('  - s:', Object.keys(s));
-                  console.log('  - l: ', typeof l);
-
                   const myres = pre(main)(p, s, l).then(resobj => {
-                    console.log('#####################');
-                    console.log(resobj);
-                    console.log('#####################');
                     return { response: resobj };
                   });
-
-                  console.log('### Returning ', myres);
 
                   return myres;
                 }
 
                 const mypipe = pipe(next, p, s, l);
-                console.log('## Returning', mypipe);
 
                 return mypipe;
               };
 
               const owwrapped = wrap(runthis, params, secrets, logger);
-              console.log('# returning a wrapped function', owwrapped);
 
               return owwrapped;
             }
