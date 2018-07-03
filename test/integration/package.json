@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@adobe/hypermedia-pipeline": "^0.3.1-class",
+    "@adobe/openwhisk-loggly-wrapper": "^0.2.0-SNAPSHOT.27",
     "winston": "^3.0.0"
   }
 }
