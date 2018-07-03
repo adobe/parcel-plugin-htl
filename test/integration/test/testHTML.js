@@ -11,6 +11,7 @@
  */
 /* eslint-env mocha */
 const assert = require('assert');
+// eslint-disable-next-line import/no-unresolved
 const script = require('../dist/html.js');
 
 describe('Testing html.htl Pipeline', () => {
@@ -76,6 +77,6 @@ describe('Testing html.htl Pipeline', () => {
         assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
         done();
       })
-      .catch((e) => { console.error('Test FAILED'); assert.fail(e); done(); });
+      .catch(done);
   });
 });

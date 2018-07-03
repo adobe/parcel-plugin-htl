@@ -6,7 +6,7 @@
     "main": "index.js",
     "scripts": {
         "test": "mocha test/unit",
-        "lint": "npx eslint *.js"
+        "lint": "./node_modules/.bin/eslint ."
     },
     "author": "",
     "license": "Apache-2.0",
@@ -15,7 +15,8 @@
         "@adobe/hypermedia-pipeline": "^0.2.0-SNAPSHOT.26",
         "@adobe/openwhisk-loggly-wrapper": "^0.2.0-SNAPSHOT.25",
         "logform": "^1.9.1",
-        "parcel-bundler": "^1.9.2"
+        "parcel-bundler": "^1.9.2",
+        "winston": "^3.0.0"
     },
     "devDependencies": {
         "eslint": "^4.19.1",

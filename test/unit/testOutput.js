@@ -1,8 +1,23 @@
+/*
+ * Copyright 2018 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/* global describe, it */
+
 const assert = require('assert');
 const $ = require('shelljs');
 const winston = require('winston');
+const path = require('path');
 
-describe('Test generated functions', () =>{
+describe('Test generated functions', () => {
   const params = {
     path: '/hello.md',
     __ow_method: 'get',
@@ -47,50 +62,53 @@ describe('Test generated functions', () =>{
   };
 
   it('Project can be built', () => {
-    $.cd('test/integration');
-    const code = $.exec('npm run build', {silent: true});
-    $.cd('../..');
-    assert.ok(code);
-  }).timeout(25000);;
+    $.cd(path.resolve(__dirname, '..', 'integration'));
+    const { code } = $.exec('npm run build', { silent: true });
+    assert.equal(code, 0, 'npm run build');
+  });
 
   it('Result can be loaded', (done) => {
-    $.cd('test/integration');
-    const code = $.exec('npm run build', {silent: true});
+    $.cd(path.resolve(__dirname, '..', 'integration'));
+    const { code } = $.exec('npm run build', { silent: true });
+    assert.equal(code, 0, 'npm run build');
+    delete require.cache[require.resolve('../integration/dist/html')];
+    // eslint-disable-next-line import/no-unresolved,global-require
     const html = require('../integration/dist/html');
-    $.cd('../..');
     assert.ok(html);
     assert.ok(html.main);
-    html.main(params, {SECRETS: 'there'}).then(r => {
+    html.main(params, { SECRETS: 'there' }).then((r) => {
       assert.ok(r.body.indexOf('>'));
       done();
     });
-  }).timeout(25000);
+  });
 
 
   it('Secrets and loggers are honored', (done) => {
-    $.cd('test/integration');
-    const code = $.exec('npm run build', {silent: true});
+    $.cd(path.resolve(__dirname, '..', 'integration'));
+    const { code } = $.exec('npm run build', { silent: true });
+    assert.equal(code, 0, 'npm run build');
+    delete require.cache[require.resolve('../integration/dist/html')];
+    // eslint-disable-next-line import/no-unresolved,global-require
     const html = require('../integration/dist/html');
 
     let counter = 0;
     const mylogger = winston.createLogger({
       level: 'silly',
-      format: winston.format.printf(info => {
-        if (counter==0) {
+      format: winston.format.printf((info) => {
+        if (counter === 0) {
           // that's our validation that the custom log configuration gets picked up
           done();
         }
-        counter = counter + 1;
-        return counter + ' ' + info.level + ' ' + info.message;
+        counter += 1;
+        return `${counter} ${info.level} ${info.message}`;
       }),
-      transports: new winston.transports.Console()
+      transports: new winston.transports.Console(),
     });
 
-    $.cd('../..');
     assert.ok(html);
     assert.ok(html.main);
-    html.main(params, {SECRETS: 'there'}, mylogger).then(r => {
+    html.main(params, { SECRETS: 'there' }, mylogger).then((r) => {
       assert.ok(r.body.indexOf('>'));
     });
-  }).timeout(25000);
+  });
 });
