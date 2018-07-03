@@ -80,7 +80,7 @@ describe('Testing html.htl Pipeline', () => {
   });
 
   it('Script can be executed', (done) => {
-    const result = script.main(params, {PSSST: 'secret'}, logger);
+    const result = script.main(params, { PSSST: 'secret' }, logger);
     assert.ok(result);
     result
       .then((res) => {
