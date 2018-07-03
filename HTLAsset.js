@@ -66,6 +66,9 @@ class HTLAsset extends JSAsset {
             function wrapped(params, secrets = {}, logger) {
               const runthis = (p, s, l) => {
                 const next = (p, s, l) => {
+                  if (s.PSSST) {
+                    console.log("You managed to smuggle in a secret message: " + s.PSSST);
+                  }
                   const myres = pre(main)(p, s, l).then(resobj => {
                     return { response: resobj };
                   });
