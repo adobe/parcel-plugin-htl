@@ -63,6 +63,7 @@ describe('Testing html.htl Pipeline', () => {
   });
 
   it('Script has main function', () => {
+    console.log(script);
     assert.ok(script.main);
     assert.equal(typeof script.main, 'function');
   });

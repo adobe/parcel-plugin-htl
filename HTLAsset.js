@@ -75,7 +75,14 @@ class HTLAsset extends JSAsset {
               });
             }
 
-            module.exports.main = (...args) => wrap(pipe(pre(getbody)), ...args);
+            function wrapped(params, secrets, logger) {
+              console.log('constructing pipeline');
+              const pipeline = pipe(secrets, logger);
+              console.log('running pipeline');
+              return pipeline.run(pre(params));
+            }
+
+            module.exports.main = wrap(wrapped);
         `;
     return super.parse(body);
   }
