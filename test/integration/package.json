@@ -23,7 +23,7 @@
     "parcel-bundler": "^1.9.2"
   },
   "dependencies": {
-    "@adobe/hypermedia-pipeline": "^0.2.0-SNAPSHOT.26",
+    "@adobe/hypermedia-pipeline": "^0.3.0-class",
     "winston": "^3.0.0"
   }
 }
