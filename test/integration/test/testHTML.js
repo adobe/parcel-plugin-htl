@@ -63,18 +63,15 @@ describe('Testing html.htl Pipeline', () => {
   });
 
   it('Script has main function', () => {
-    console.log('this has been loaded', script);
     assert.ok(script.main);
     assert.equal(typeof script.main, 'function');
   });
 
   it('Script can be executed', (done) => {
-    console.log('trying to run the script now');
     const result = script.main(params);
     assert.ok(result);
     result
       .then((res) => {
-        console.log('received: ', res);
         assert.ok(res, 'no response received');
         assert.ok(res.body, 'reponse has no body');
         assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
