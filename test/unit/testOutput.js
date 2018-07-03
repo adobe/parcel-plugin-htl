@@ -65,7 +65,7 @@ describe('Test generated functions', () => {
     $.cd(path.resolve(__dirname, '..', 'integration'));
     const { code } = $.exec('npm run build', { silent: true });
     assert.equal(code, 0, 'npm run build');
-  });
+  }).timeout(25000);
 
   it('Result can be loaded', (done) => {
     $.cd(path.resolve(__dirname, '..', 'integration'));
@@ -80,7 +80,7 @@ describe('Test generated functions', () => {
       assert.ok(r.body.indexOf('>'));
       done();
     });
-  });
+  }).timeout(25000);
 
 
   it('Secrets and loggers are honored', (done) => {
@@ -110,5 +110,5 @@ describe('Test generated functions', () => {
     html.main(params, { SECRETS: 'there' }, mylogger).then((r) => {
       assert.ok(r.body.indexOf('>'));
     });
-  });
+  }).timeout(25000);
 });
