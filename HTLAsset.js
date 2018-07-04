@@ -63,19 +63,30 @@ class HTLAsset extends JSAsset {
             const wrap = require('@adobe/openwhisk-loggly-wrapper');
             //this gets called by openwhisk
 
-            function getbody(params, secrets, logger) {
-              return main(params, secrets, logger).then(resobj => {
-                // htlengine puts the formatted html into the body property of the
-                // returned object, but the hypermedia pipeline expects it to be
-                // in the response.body object
-                return { response: resobj};
-              })
-              .catch(error => {
-                console.error('Whaaa?', error);
-              });
+            function wrapped(params, secrets = {}, logger) {
+              const runthis = (p, s, l) => {
+                const next = (p, s, l) => {
+                  if (s.PSSST) {
+                    console.log("You managed to smuggle in a secret message: " + s.PSSST);
+                  }
+                  const myres = pre(main)(p, s, l).then(resobj => {
+                    return { response: resobj };
+                  });
+
+                  return myres;
+                }
+
+                const mypipe = pipe(next, p, s, l);
+
+                return mypipe;
+              };
+
+              const owwrapped = wrap(runthis, params, secrets, logger);
+
+              return owwrapped;
             }
 
-            module.exports.main = (...args) => wrap(pipe(pre(getbody)), ...args);
+            module.exports.main = wrapped;
         `;
     return super.parse(body);
   }

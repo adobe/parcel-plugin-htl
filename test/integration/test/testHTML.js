@@ -13,6 +13,18 @@
 const assert = require('assert');
 // eslint-disable-next-line import/no-unresolved
 const script = require('../dist/html.js');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  // tune this for debugging
+  level: 'debug',
+  // and turn this on if you want the output
+  silent: true,
+  format: winston.format.simple(),
+  transports: [
+    new winston.transports.Console(),
+  ],
+});
 
 describe('Testing html.htl Pipeline', () => {
   const params = {
@@ -68,7 +80,7 @@ describe('Testing html.htl Pipeline', () => {
   });
 
   it('Script can be executed', (done) => {
-    const result = script.main(params);
+    const result = script.main(params, { PSSST: 'secret' }, logger);
     assert.ok(result);
     result
       .then((res) => {
