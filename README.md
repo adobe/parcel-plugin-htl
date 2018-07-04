@@ -2,6 +2,11 @@
 
 This is a plugin for Parcel which compiles `*.htl` (i.e. Sightly) templates into `dist/*.js` output. 
 
+## Status
+
+[![CircleCI](https://circleci.com/gh/adobe/parcel-plugin-htl.svg?style=svg)](https://circleci.com/gh/adobe/parcel-plugin-htl)
+
+
 ## Usage
 
 Add `@adobe/parcel-plugin-htl` to your `devDependencies` and then run
