@@ -14,6 +14,7 @@ const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 const JSAsset = require('parcel-bundler/src/assets/JSAsset');
 const fs = require('fs');
 const path = require('path');
+const resolver = require('./resolver');
 
 const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
@@ -33,24 +34,16 @@ class HTLAsset extends JSAsset {
     this.contents = compiler.compileToString(code);
 
     const rootname = this.name.replace(/\.[^.]+$/, '');
-    const extension = this.basename
-      .split('.')
-      .slice(-2, -1)
-      .pop();
-    const selector = this.basename
-      .split('.')
-      .slice(0, -2)
-      .join('.');
+
+    const extension = resolver.extension(this.basename);
 
     const pipe = this.getPreprocessor(
       `${rootname}.pipe.js`,
       `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`,
-      selector,
     );
     const pre = this.getPreprocessor(
       `${rootname}.pre.js`,
       `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`,
-      selector,
     );
 
     // return super.parse(this.contents);
