@@ -79,7 +79,7 @@ describe('Test simple selector resolution', () => {
   });
 
   it('js.foo_html.htl selector', () => {
-    assert.equal('foo', resolver.selector('js.foo_html.htl'));
+    assert.equal('js.foo', resolver.selector('js.foo_html.htl'));
   });
 
   it('bar_js.htl selector', () => {
@@ -87,10 +87,24 @@ describe('Test simple selector resolution', () => {
   });
 
   it('not.html.bar_js.htl selector', () => {
-    assert.equal('not.html', resolver.selector('not.html.bar_js.htl'));
+    assert.equal('not.html.bar', resolver.selector('not.html.bar_js.htl'));
   });
 
   it('some.thing.baz_json.htl selector', () => {
     assert.equal('some.thing.baz', resolver.selector('some.thing.baz_json.htl'));
+  });
+});
+
+describe('Test null selector resolution', () => {
+  it('html.htl extension', () => {
+    assert.equal(null, resolver.selector('html.htl'));
+  });
+
+  it('js.htl extension', () => {
+    assert.equal(null, resolver.selector('js.htl'));
+  });
+
+  it('json.htl extension', () => {
+    assert.equal(null, resolver.selector('json.htl'));
   });
 });

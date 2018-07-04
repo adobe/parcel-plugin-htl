@@ -9,3 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+function basename(name) {
+  return name.split('.').slice(0,-1).join('.');
+}
+
+function extension(name) {
+  return basename(name).split('_').pop();
+}
+
+function selector(name) {
+  const parts = basename(name).split('_');
+  if (parts.length == 2) {
+    return parts[0];
+  }
+  return null;
+}
+
+module.exports = {selector, extension};
