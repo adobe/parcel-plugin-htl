@@ -11,7 +11,7 @@
  */
 
 function basename(name) {
-  return name.split('.').slice(0,-1).join('.');
+  return name.split('.').slice(0, -1).join('.');
 }
 
 function extension(name) {
@@ -20,10 +20,10 @@ function extension(name) {
 
 function selector(name) {
   const parts = basename(name).split('_');
-  if (parts.length == 2) {
+  if (parts.length === 2) {
     return parts[0];
   }
   return null;
 }
 
-module.exports = {selector, extension};
+module.exports = { selector, extension };

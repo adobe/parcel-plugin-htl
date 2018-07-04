@@ -76,6 +76,12 @@ describe('Test generated functions', () => {
     const html = require('../integration/dist/html');
     assert.ok(html);
     assert.ok(html.main);
+
+    // eslint-disable-next-line import/no-unresolved,global-require
+    const selectors = require('../integration/dist/simple_html');
+    assert.ok(selectors);
+    assert.ok(selectors.main);
+
     html.main(params, { SECRETS: 'there' }).then((r) => {
       assert.ok(r.body.indexOf('>'));
       done();
