@@ -11,9 +11,9 @@
  */
 /* eslint-env mocha */
 const assert = require('assert');
+const winston = require('winston');
 // eslint-disable-next-line import/no-unresolved
 const script = require('../dist/html.js');
-const winston = require('winston');
 
 const logger = winston.createLogger({
   // tune this for debugging
