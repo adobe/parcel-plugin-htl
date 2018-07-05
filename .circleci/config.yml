@@ -17,7 +17,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}-{{ checksum "test/integration/package.json" }}
+            - v4-dependencies-{{ checksum "package.json" }}-{{ checksum "test/integration/package.json" }}
 
       - run: 
           name: Install Dependencies
@@ -48,7 +48,8 @@ jobs:
           paths:
             - node_modules
             - test/integration/node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}-{{ checksum "test/integration/package.json" }}
+            - test/example/node_modules
+          key: v4-dependencies-{{ checksum "package.json" }}-{{ checksum "test/integration/package.json" }}
           
       - store_test_results:
           path: test/integration/junit
@@ -69,7 +70,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}
+            - v4-dependencies-{{ checksum "package.json" }}
 
       - run: 
           name: Install Dependencies
@@ -78,7 +79,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}
+          key: v4-dependencies-{{ checksum "package.json" }}
 
 #      # run tests!
 #      - run: mkdir junit
