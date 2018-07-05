@@ -81,6 +81,8 @@ describe('Run Parcel', () => {
     const bundler = new Bundler('./test/example/test.htl', options);
     bundler.bundle().then((res) => {
       assert.ok(res);
+      assert.ok(fs.existsSync('./dist/test.js'), 'output file has been generated');
+      assert.ok(!fs.existsSync('./dist/test.htl'), 'input file has been passed through');
       done();
     });
   }).timeout(15000);
