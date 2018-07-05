@@ -12,51 +12,54 @@
 
 /* eslint-env node, mocha */
 
-const assert = require("assert");
-const winston = require("winston");
-const Bundler = require("parcel-bundler");
+const assert = require('assert');
+const winston = require('winston');
+const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 
 const logger = winston.createLogger({
-  level: "silly",
+  level: 'silly',
   silent: true,
   format: winston.format.simple(),
-  transports: new winston.transports.Console()
+  transports: new winston.transports.Console(),
 });
 
 const options = {
-  outDir: "./dist", // The out directory to put the build files in, defaults to dist
-  watch: false, // whether to watch the files and rebuild them on change, defaults to process.env.NODE_ENV !== 'production'
+  outDir: './dist', // The out directory to put the build files in, defaults to dist
+  watch: false, // whether to watch the files and rebuild them on change, defaults to
+  // process.env.NODE_ENV !== 'production'
   cache: false, // Enabled or disables caching, defaults to true
   minify: false, // Minify files, enabled if process.env.NODE_ENV === 'production'
-  target: "node", // browser/node/electron, defaults to browser
+  target: 'node', // browser/node/electron, defaults to browser
   https: false, // Serve files over https or http, defaults to false
   logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
-  sourceMaps: true, // Enable or disable sourcemaps, defaults to enabled (not supported in minified builds yet)
-  detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times, defaults to false, reports are only printed if watch is disabled
-  //rootDir: 'test/integration'
+  sourceMaps: true, // Enable or disable sourcemaps, defaults to enabled (not supported in
+  // minified builds yet)
+  detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
+  // defaults to false, reports are only printed if watch is disabled
+  rootDir: 'test/integration'
 };
 
-describe("Run Parcel", () => {
-  it("Run Parcel programmatically on html.htl", done => {
+describe('Run Parcel', () => {
+  it('Run Parcel programmatically on html.htl', (done) => {
     fs.removeSync('./dist');
     fs.removeSync('./test/example/package.json');
     fs.mkdir('./dist');
 
     const package = fs.readJSONSync('./package.json');
     package.devDependencies = package.dependencies;
-    package.name = package.name + ' Test Package';
+    package.name += ' Test Package';
     delete package.description;
-    delete package.main;
+    //delete package.main;
+    package.main = 'test.htl';
     delete package.scripts;
     delete package.repository;
     delete package.dependencies;
-    package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:../..';
+    package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
     fs.writeJSONSync('./test/example/package.json', package);
-    console.log(package);
 
-    const bundler = new Bundler("./test/example/test.htl", options);
-    bundler.bundle().then(res => {
+    const bundler = new Bundler('./test/integration/src/html.htl', options);
+    bundler.bundle().then((res) => {
       assert.ok(res);
       done();
     });
