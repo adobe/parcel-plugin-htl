@@ -4,7 +4,7 @@ This is a plugin for Parcel which compiles `*.htl` (i.e. Sightly) templates into
 
 ## Status
 
-[![CircleCI](https://circleci.com/gh/adobe/parcel-plugin-htl.svg?style=svg)](https://circleci.com/gh/adobe/parcel-plugin-htl)
+[![CircleCI](https://circleci.com/gh/adobe/parcel-plugin-htl.svg?style=svg)](https://circleci.com/gh/adobe/parcel-plugin-htl) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/parcel-plugin-htl.svg)](https://greenkeeper.io/)
 
 
 ## Usage
