@@ -16,6 +16,7 @@ const assert = require('assert');
 const winston = require('winston');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
+const { exec } = require('child_process');
 
 const logger = winston.createLogger({
   level: 'silly',
@@ -37,7 +38,7 @@ const options = {
   // minified builds yet)
   detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
   // defaults to false, reports are only printed if watch is disabled
-  rootDir: 'test/integration'
+  rootDir: 'test/example'
 };
 
 describe('Run Parcel', () => {
@@ -46,9 +47,10 @@ describe('Run Parcel', () => {
     fs.removeSync('./test/example/package.json');
     fs.mkdir('./dist');
 
+
     const package = fs.readJSONSync('./package.json');
     package.devDependencies = package.dependencies;
-    package.name += ' Test Package';
+    package.name += '-test';
     delete package.description;
     //delete package.main;
     package.main = 'test.htl';
@@ -58,10 +60,14 @@ describe('Run Parcel', () => {
     package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
     fs.writeJSONSync('./test/example/package.json', package);
 
-    const bundler = new Bundler('./test/integration/src/html.htl', options);
-    bundler.bundle().then((res) => {
-      assert.ok(res);
-      done();
+    exec('npm install', {cwd: './test/example'}, (error, stdout, stderr) => {
+      console.log("Install completed");
+
+      const bundler = new Bundler('./test/example/test.htl', options);
+      bundler.bundle().then((res) => {
+        assert.ok(res);
+        done();
+      });
     });
-  });
+  }).timeout(15000);
 });
