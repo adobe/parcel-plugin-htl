@@ -38,11 +38,11 @@ const options = {
   // minified builds yet)
   detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
   // defaults to false, reports are only printed if watch is disabled
-  rootDir: 'test/example'
+  rootDir: 'test/example',
 };
 
 describe('Run Parcel', () => {
-  before('Setting up example directory', function(done) {
+  before('Setting up example directory', function beforeHook(done) {
     // individual timeout for first installation
     this.timeout(60000);
 
@@ -51,7 +51,7 @@ describe('Run Parcel', () => {
     package.devDependencies = package.dependencies;
     package.name += '-test';
     delete package.description;
-    //delete package.main;
+    // delete package.main;
     package.main = 'test.htl';
     delete package.scripts;
     delete package.repository;
@@ -60,17 +60,17 @@ describe('Run Parcel', () => {
     fs.writeJSONSync('./test/example/package.json', package);
 
     logger.debug('Running npm install');
-    exec('npm install', {cwd: './test/example'}, (error, stdout, stderr) => {
+    exec('npm install', { cwd: './test/example' }, (error) => {
       if (!error) {
         logger.debug('npm install completed');
         done();
       } else {
-        fail(error);
+        logger.error('npm install failed');
       }
     });
   });
 
-  beforeEach(done => {
+  beforeEach((done) => {
     logger.debug('Resetting dist');
     fs.removeSync('./dist');
     fs.mkdir('./dist');
