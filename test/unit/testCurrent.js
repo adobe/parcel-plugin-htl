@@ -20,7 +20,7 @@ const { exec } = require('child_process');
 
 const logger = winston.createLogger({
   level: 'silly',
-  silent: true,
+  silent: false,
   format: winston.format.simple(),
   transports: new winston.transports.Console(),
 });
@@ -42,12 +42,11 @@ const options = {
 };
 
 describe('Run Parcel', () => {
-  it('Run Parcel programmatically on html.htl', (done) => {
-    fs.removeSync('./dist');
-    fs.removeSync('./test/example/package.json');
-    fs.mkdir('./dist');
+  before('Setting up example directory', function(done) {
+    // individual timeout for first installation
+    this.timeout(60000);
 
-
+    logger.debug('creating test/example/package.json');
     const package = fs.readJSONSync('./package.json');
     package.devDependencies = package.dependencies;
     package.name += '-test';
@@ -60,14 +59,29 @@ describe('Run Parcel', () => {
     package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
     fs.writeJSONSync('./test/example/package.json', package);
 
+    logger.debug('Running npm install');
     exec('npm install', {cwd: './test/example'}, (error, stdout, stderr) => {
-      console.log("Install completed");
-
-      const bundler = new Bundler('./test/example/test.htl', options);
-      bundler.bundle().then((res) => {
-        assert.ok(res);
+      if (!error) {
+        logger.debug('npm install completed');
         done();
-      });
+      } else {
+        fail(error);
+      }
+    });
+  });
+
+  beforeEach(done => {
+    logger.debug('Resetting dist');
+    fs.removeSync('./dist');
+    fs.mkdir('./dist');
+    done();
+  });
+
+  it('Run Parcel programmatically on html.htl', (done) => {
+    const bundler = new Bundler('./test/example/test.htl', options);
+    bundler.bundle().then((res) => {
+      assert.ok(res);
+      done();
     });
   }).timeout(15000);
 });
