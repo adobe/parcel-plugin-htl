@@ -80,6 +80,7 @@ before('Setting up example directory', function beforeHook(done) {
       console.log(stdout);
       // eslint-disable-next-line no-console
       console.error(stderr);
+      done(error);
     }
   });
 });
