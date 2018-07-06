@@ -17,7 +17,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}-{{ checksum "test/integration/package.json" }}
+            - v4-dependencies-{{ checksum "package.json" }}
 
       - run: 
           name: Install Dependencies
@@ -29,9 +29,8 @@ jobs:
 
       # run tests!
       - run:
-          name: Running Integration Tests
-          command: npm install && mkdir junit && npm run build && npx mocha test --reporter mocha-junit-reporter
-          working_directory: test/integration
+          name: Running Tests
+          command: npx mocha test/unit --reporter mocha-junit-reporter
           environment:
             MOCHA_FILE: junit/test-results.xml
           when: always
@@ -48,7 +47,8 @@ jobs:
           paths:
             - node_modules
             - test/integration/node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}-{{ checksum "test/integration/package.json" }}
+            - test/example/node_modules
+          key: v4-dependencies-{{ checksum "package.json" }}
           
       - store_test_results:
           path: test/integration/junit
@@ -69,7 +69,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}
+            - v4-dependencies-{{ checksum "package.json" }}
 
       - run: 
           name: Install Dependencies
@@ -78,7 +78,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}
+          key: v4-dependencies-{{ checksum "package.json" }}
 
 #      # run tests!
 #      - run: mkdir junit
