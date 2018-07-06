@@ -14,8 +14,8 @@ const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 const JSAsset = require('parcel-bundler/src/assets/JSAsset');
 const fs = require('fs');
 const path = require('path');
-const resolver = require('./resolver');
 const logger = require('parcel-bundler/src/Logger');
+const resolver = require('./resolver');
 
 const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
@@ -95,7 +95,7 @@ class HTLAsset extends JSAsset {
         return fallback;
       }
     } catch (e) {
-      logger.log(fallback + ' cannot be found, using default pipeline');
+      logger.log(`${fallback} cannot be found, using default pipeline`);
     }
 
     return DEFAULT_PIPELINE;
