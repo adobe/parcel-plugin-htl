@@ -29,9 +29,8 @@ jobs:
 
       # run tests!
       - run:
-          name: Running Integration Tests
-          command: npm install && mkdir junit && npm run build && npx mocha test --reporter mocha-junit-reporter
-          working_directory: test/integration
+          name: Running Tests
+          command: npx mocha test --reporter mocha-junit-reporter
           environment:
             MOCHA_FILE: junit/test-results.xml
           when: always
