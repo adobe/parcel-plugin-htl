@@ -14,12 +14,12 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@adobe/htlengine": "^1.0.2-SNAPSHOT.26",
-    "@adobe/hypermedia-pipeline": "^0.3.2-SNAPSHOT.42",
+    "@adobe/hypermedia-pipeline": "^0.3.2-SNAPSHOT.74",
     "@adobe/openwhisk-loggly-wrapper": "^0.2.0-SNAPSHOT.27",
     "logform": "^1.9.1",
     "parcel-bundler": "^1.9.2",
-    "winston": "^3.0.0",
-    "snyk": "^1.88.1"
+    "snyk": "^1.88.1",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "codecov": "^3.0.2",

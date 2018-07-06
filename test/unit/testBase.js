@@ -61,6 +61,7 @@ before('Setting up example directory', function beforeHook(done) {
   delete package.dependencies;
   package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
 
+  fs.removeSync('./test/example/package-lock.json');
   fs.writeJSONSync('./test/example/package.json', package);
 
   logger.debug('Resetting dist');
@@ -68,12 +69,17 @@ before('Setting up example directory', function beforeHook(done) {
   fs.mkdir('./dist');
 
   logger.debug('Running npm install');
-  exec('npm install', { cwd: './test/example' }, (error) => {
+  exec('npm install', { cwd: './test/example' }, (error, stdout, stderr) => {
     if (!error) {
       logger.debug('npm install completed');
       done();
     } else {
       logger.error('npm install failed');
+      logger.error(error);
+      // eslint-disable-next-line no-console
+      console.log(stdout);
+      // eslint-disable-next-line no-console
+      console.error(stderr);
     }
   });
 });
