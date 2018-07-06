@@ -14,6 +14,14 @@ function foo() {
   return 'bar';
 }
 
-module.exports.pre = function pre(args) {
-  return args;
+module.exports.pre = function pre(next) {
+  console.log('I am in pre.js and I just got called');
+
+  return (payload, secrets, logger) => {
+    const mypayload = Object.assign({}, payload);
+
+    mypayload.resource.foo = foo();
+
+    return next(payload, secrets, logger);
+  };
 };

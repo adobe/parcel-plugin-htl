@@ -94,6 +94,7 @@ describe('simple_html.htl', () => {
         assert.ok(res, 'no response received');
         assert.ok(res.body, 'reponse has no body');
         assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
+        assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
         done();
       })
       .catch(done);
