@@ -15,6 +15,7 @@ const JSAsset = require('parcel-bundler/src/assets/JSAsset');
 const fs = require('fs');
 const path = require('path');
 const resolver = require('./resolver');
+const logger = require('parcel-bundler/src/Logger');
 
 const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
@@ -94,7 +95,7 @@ class HTLAsset extends JSAsset {
         return fallback;
       }
     } catch (e) {
-      return DEFAULT_PIPELINE;
+      logger.log(fallback + ' cannot be found, using default pipeline');
     }
 
     return DEFAULT_PIPELINE;
