@@ -14,6 +14,7 @@ const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const { options, logger } = require('./testBase');
+const winston = require('winston');
 
 const params = {
   path: '/hello.md',
@@ -98,5 +99,29 @@ describe('html.htl', () => {
         done();
       })
       .catch(done);
+  });
+
+  it('secrets and loggers are honored', (done) => {
+    // eslint-disable-next-line import/no-unresolved, global-require
+    const script = require('../../dist/html.js');
+    let counter = 0;
+    const mylogger = winston.createLogger({
+      level: 'silly',
+      silent: false,
+      format: winston.format.printf((info) => {
+        if (counter === 0) {
+          // that's our validation that the custom log configuration gets picked up
+          done();
+        }
+        counter += 1;
+        return `${counter} ${info.level} ${info.message}`;
+      }),
+      transports: new winston.transports.Console(),
+    });
+
+    script.main(params, { SECRETS: 'there' }, mylogger).then((r) => {
+      assert.ok(r.body.indexOf('>'));
+    });
+
   });
 });
