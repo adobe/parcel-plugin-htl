@@ -12,18 +12,19 @@
 
 /* eslint-env node, mocha */
 
-const assert = require('assert');
 const winston = require('winston');
-const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const { exec } = require('child_process');
 
 const logger = winston.createLogger({
   level: 'silly',
-  silent: false,
+  silent: true,
   format: winston.format.simple(),
   transports: new winston.transports.Console(),
 });
+
+module.exports.logger = logger;
+
 
 const options = {
   outDir: './dist', // The out directory to put the build files in, defaults to dist
@@ -33,7 +34,7 @@ const options = {
   minify: false, // Minify files, enabled if process.env.NODE_ENV === 'production'
   target: 'node', // browser/node/electron, defaults to browser
   https: false, // Serve files over https or http, defaults to false
-  logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
+  logLevel: 1, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
   sourceMaps: true, // Enable or disable sourcemaps, defaults to enabled (not supported in
   // minified builds yet)
   detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
@@ -41,49 +42,46 @@ const options = {
   rootDir: 'test/example',
 };
 
-describe('Run Parcel', () => {
-  before('Setting up example directory', function beforeHook(done) {
-    // individual timeout for first installation
-    this.timeout(60000);
+module.exports.options = options;
 
-    logger.debug('creating test/example/package.json');
-    const package = fs.readJSONSync('./package.json');
-    package.devDependencies = package.dependencies;
-    package.name += '-test';
-    delete package.description;
-    // delete package.main;
-    package.main = 'test.htl';
-    delete package.scripts;
-    delete package.repository;
-    delete package.dependencies;
-    package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
-    fs.writeJSONSync('./test/example/package.json', package);
 
-    logger.debug('Running npm install');
-    exec('npm install', { cwd: './test/example' }, (error) => {
-      if (!error) {
-        logger.debug('npm install completed');
-        done();
-      } else {
-        logger.error('npm install failed');
-      }
-    });
-  });
+before('Setting up example directory', function beforeHook(done) {
+  // individual timeout for first installation
+  this.timeout(60000);
 
-  beforeEach((done) => {
-    logger.debug('Resetting dist');
-    fs.removeSync('./dist');
-    fs.mkdir('./dist');
-    done();
-  });
+  logger.debug('creating test/example/package.json');
+  const package = fs.readJSONSync('./package.json');
+  package.devDependencies = package.dependencies;
+  package.name += '-test';
+  delete package.description;
+  // delete package.main;
+  package.main = 'test.htl';
+  delete package.scripts;
+  delete package.repository;
+  delete package.dependencies;
+  package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
 
-  it('Run Parcel programmatically on html.htl', (done) => {
-    const bundler = new Bundler('./test/example/test.htl', options);
-    bundler.bundle().then((res) => {
-      assert.ok(res);
-      assert.ok(fs.existsSync('./dist/test.js'), 'output file has been generated');
-      assert.ok(!fs.existsSync('./dist/test.htl'), 'input file has been passed through');
+  fs.writeJSONSync('./test/example/package.json', package);
+
+  logger.debug('Resetting dist');
+  fs.removeSync('./dist');
+  fs.mkdir('./dist');
+
+  logger.debug('Running npm install');
+  exec('npm install', { cwd: './test/example' }, (error) => {
+    if (!error) {
+      logger.debug('npm install completed');
       done();
-    });
-  }).timeout(15000);
+    } else {
+      logger.error('npm install failed');
+    }
+  });
+});
+
+
+afterEach((done) => {
+  logger.debug('Resetting dist');
+  // fs.removeSync('./dist');
+  // fs.mkdir('./dist');
+  done();
 });
