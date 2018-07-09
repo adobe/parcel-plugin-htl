@@ -59,7 +59,7 @@ const params = {
 
 describe('alex_html.htl', () => {
   beforeEach('Run Parcel programmatically on alex_html.htl', function be(done) {
-    this.setTimeout(5000);
+    this.timeout(5000);
     const bundler = new Bundler('./test/example/alex_html.htl', options);
     bundler.bundle().then(() => done());
   });
