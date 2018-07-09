@@ -84,6 +84,9 @@ describe('alex_html.htl', () => {
   });
 
   it('script can be executed', (done) => {
+    logger.silent = false;
+    logger.level = 'debug';
+
     // eslint-disable-next-line import/no-unresolved, global-require
     const script = require('../../dist/alex_html.js');
     const result = script.main(params, { PSSST: 'secret' }, logger);

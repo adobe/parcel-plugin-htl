@@ -10,15 +10,103 @@
  * governing permissions and limitations under the License.
  */
 
+const _ = require('lodash/fp');
+const request = require("request-promise");
+
+function collectMetadata(req, logger) {
+  const options = {
+    uri: `https://api.github.com/repos/${req.params.owner}/${
+      req.params.repo
+    }/commits?path=${req.params.path}&sha=${req.params.ref}`,
+    headers: {
+      "User-Agent": "Request-Promise"
+    },
+    json: true
+  };
+
+  logger.debug("Fetching Git Metadata from " + options.uri);
+
+  return request(options)
+    .then(metadata => {
+      logger.debug("Got git metadata");
+      return metadata;
+    })
+    .catch(error => {
+      logger.error("Failed to get metadata", error);
+      return {};
+    });
+}
+
+/**
+ * Extracts some committers data from the list of commits and appends the list to the resource
+ * @param {RequestContext} ctx Context
+ */
+function extractCommittersFromMetadata(meta, logger) {
+  const res = Object.values(meta)
+    .filter(commit => !!commit.author)
+    .map(commit => {
+      return {
+        avatar_url: commit.author.avatar_url,
+        display: `${commit.commit.author.name} | ${commit.commit.author.email}`
+      };
+    });
+  const uniq = _.uniqBy(JSON.stringify, res) 
+  return uniq;
+}
+
+function extractLastModifiedFromMetadata(meta = [], logger) {
+  logger.debug('Getting last modified date from Git');
+  const lastMod = meta.length > 0
+    && meta[0].commit
+    && meta[0].commit.author ? meta[0].commit.author.date : null;
+
+  logger.debug(lastMod);
+  return {
+    raw: lastMod,
+    display: lastMod ? new Date(lastMod) : 'Unknown',
+  };
+}
+
 // the most compact way to write a pre.js:
-// 
+//
 // module.exports.pre is a function (taking next as an argument)
 // that returns a function (with payload, secrets, logger as arguments)
 // that calls next (after modifying the payload a bit)
-module.exports.pre = (next) => (payload, secrets, logger) => {
+module.exports.pre = next => (payload, secrets, logger) => {
   const mypayload = Object.assign({}, payload);
 
-  mypayload.resource.contextPath = 'myinjectedcontextpath';
+  logger.debug("setting context path");
+  mypayload.resource.contextPath = "myinjectedcontextpath";
 
-  return next(mypayload, secrets, logger);
-}
+  logger.debug("collecting metadata");
+
+  try {
+    return collectMetadata(payload.request, logger)
+      .then(gitmeta => {
+        logger.debug("Metadata has arrived");
+        mypayload.resource.gitmetadata = gitmeta;
+        return gitmeta;
+      })
+      .then(gitmeta => {
+        const committers = extractCommittersFromMetadata(gitmeta, logger);
+        mypayload.resource.committers = committers;
+        return gitmeta;
+      })
+      .then(gitmeta => {
+        const lastMod = extractLastModifiedFromMetadata(gitmeta, logger);
+        mypayload.resource.lastModified = lastMod;
+        return gitmeta;
+      })
+      .then(() => {
+        // finally
+        return next(mypayload, secrets, logger);
+      })
+      .catch(e => {
+        logger.error(e);
+        return { error: e };
+      });
+  } catch (e) {
+    logger.error(e);
+    return { error: e };
+  }
+};

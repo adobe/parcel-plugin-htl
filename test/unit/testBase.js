@@ -48,6 +48,10 @@ module.exports.options = options;
 before('Setting up example directory', function beforeHook(done) {
   // individual timeout for first installation
   this.timeout(60000);
+  if (process.env.SKIP_NPM) {
+    done();
+    return;
+  }
 
   logger.debug('creating test/example/package.json');
   const package = fs.readJSONSync('./package.json');
