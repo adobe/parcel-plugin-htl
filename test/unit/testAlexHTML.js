@@ -58,7 +58,7 @@ const params = {
 };
 
 describe('alex_html.htl', () => {
-  beforeEach('Run Parcel programmatically on alex_html.htl', function(done) {
+  beforeEach('Run Parcel programmatically on alex_html.htl', function be(done) {
     this.setTimeout(5000);
     const bundler = new Bundler('./test/example/alex_html.htl', options);
     bundler.bundle().then(() => done());
@@ -85,8 +85,8 @@ describe('alex_html.htl', () => {
   });
 
   it('script can be executed', (done) => {
-    //logger.silent = false;
-    //logger.level = 'debug';
+    // logger.silent = false;
+    // logger.level = 'debug';
 
     // eslint-disable-next-line import/no-unresolved, global-require
     const script = require('../../dist/alex_html.js');
