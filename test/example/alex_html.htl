@@ -26,7 +26,7 @@
                         <h1>${it.title}</h1>
                          <div data-sly-test="${it.resource.committers && it.resource.lastModified}" class="author">
                              <sly data-sly-list="${it.resource.committers}"><img title="${item.display}" src="${item.avatar_url}"></sly>
-                             <span class="lastModified">Last modified <time datetime="${it.lastModified.raw}">${it.lastModified.display}</time></span>
+                             <span class="lastModified">Last modified <time datetime="${it.resource.lastModified.raw}">${it.resource.lastModified.display}</time></span>
                         </div>
                     </div>
                     <div data-sly-list="${it.resource.children}">${item}</div>
