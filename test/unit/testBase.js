@@ -13,8 +13,7 @@
 /* eslint-env node, mocha */
 
 const winston = require('winston');
-const fs = require('fs-extra');
-const { exec } = require('child_process');
+const path = require('path');
 
 const logger = winston.createLogger({
   level: 'silly',
@@ -25,9 +24,8 @@ const logger = winston.createLogger({
 
 module.exports.logger = logger;
 
-
 const options = {
-  outDir: './dist', // The out directory to put the build files in, defaults to dist
+  outDir: path.resolve(__dirname, '../example/dist'), // The out directory to put the build files in, defaults to dist
   watch: false, // whether to watch the files and rebuild them on change, defaults to
   // process.env.NODE_ENV !== 'production'
   cache: false, // Enabled or disables caching, defaults to true
@@ -39,49 +37,8 @@ const options = {
   // minified builds yet)
   detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
   // defaults to false, reports are only printed if watch is disabled
-  rootDir: 'test/example',
+  rootDir: path.resolve(__dirname, '../example'),
+  killWorkers: true,
 };
 
 module.exports.options = options;
-
-
-before('Setting up example directory', function beforeHook(done) {
-  // individual timeout for first installation
-  this.timeout(60000);
-
-  logger.debug('creating test/example/package.json');
-  const package = fs.readJSONSync('./package.json');
-  package.devDependencies = package.dependencies;
-  package.name += '-test';
-  delete package.description;
-  // delete package.main;
-  package.main = 'test.htl';
-  delete package.scripts;
-  delete package.repository;
-  delete package.dependencies;
-  package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
-
-  fs.writeJSONSync('./test/example/package.json', package);
-
-  logger.debug('Resetting dist');
-  fs.removeSync('./dist');
-  fs.mkdir('./dist');
-
-  logger.debug('Running npm install');
-  exec('npm install', { cwd: './test/example' }, (error) => {
-    if (!error) {
-      logger.debug('npm install completed');
-      done();
-    } else {
-      logger.error('npm install failed');
-    }
-  });
-});
-
-
-afterEach((done) => {
-  logger.debug('Resetting dist');
-  // fs.removeSync('./dist');
-  // fs.mkdir('./dist');
-  done();
-});

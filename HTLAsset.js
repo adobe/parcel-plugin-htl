@@ -23,7 +23,6 @@ class HTLAsset extends JSAsset {
   constructor(name, options) {
     super(name, options);
     this.type = 'js';
-    this.id = `htl${this.id}`;
   }
 
   async parse(code) {
