@@ -5,7 +5,7 @@
   "description": "Compiles HTL templates to JS functions",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/unit",
+    "test": "mocha --exit test/unit",
     "lint": "./node_modules/.bin/eslint .",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
