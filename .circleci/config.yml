@@ -38,7 +38,7 @@ jobs:
       # get code coverage
       - run:
           name: Getting Code Coverage
-          command: npx istanbul cover ./node_modules/mocha/bin/_mocha test/unit/*.js --exit -- -R spec && npx codecov
+          command: npx istanbul cover ./node_modules/mocha/bin/_mocha test/unit/*.js -- --exit -R spec && npx codecov
           environment:
             MOCHA_FILE: junit/test-results.xml
           when: always
