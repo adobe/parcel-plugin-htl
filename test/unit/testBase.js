@@ -14,8 +14,6 @@
 
 const winston = require('winston');
 const path = require('path');
-const fs = require('fs-extra');
-const { exec } = require('child_process');
 
 const logger = winston.createLogger({
   level: 'silly',
@@ -44,56 +42,3 @@ const options = {
 };
 
 module.exports.options = options;
-
-
-before('Setting up example directory', function beforeHook(done) {
-  // individual timeout for first installation
-  this.timeout(120000);
-  if (process.env.SKIP_NPM) {
-    done();
-    return;
-  }
-
-  logger.debug('creating test/example/package.json');
-  const package = fs.readJSONSync('./package.json');
-  package.devDependencies = package.dependencies;
-  package.name += '-test';
-  delete package.description;
-  // delete package.main;
-  package.main = 'test.htl';
-  delete package.scripts;
-  delete package.repository;
-  delete package.dependencies;
-  package.devDependencies['@adobe/parcel-plugin-htl'] = 'file:./../..';
-
-  fs.removeSync('./test/example/package-lock.json');
-  fs.writeJSONSync('./test/example/package.json', package);
-
-  logger.debug('Resetting dist');
-  fs.removeSync('./dist');
-  fs.mkdir('./dist');
-
-  logger.debug('Running npm install');
-  exec('npm install', { cwd: './test/example' }, (error, stdout, stderr) => {
-    if (!error) {
-      logger.debug('npm install completed');
-      done();
-    } else {
-      logger.error('npm install failed');
-      logger.error(error);
-      // eslint-disable-next-line no-console
-      console.log(stdout);
-      // eslint-disable-next-line no-console
-      console.error(stderr);
-      done(error);
-    }
-  });
-});
-
-
-afterEach((done) => {
-  logger.debug('Resetting dist');
-  // fs.removeSync('./dist');
-  // fs.mkdir('./dist');
-  done();
-});
