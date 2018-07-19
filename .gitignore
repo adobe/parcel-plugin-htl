@@ -1,4 +1,5 @@
 /test/integration/node_modules/*
+/test/example/dist
 /dist
 /test/example/node_modules
 /test/example/package.json
@@ -13,3 +14,4 @@
 /test/integration/node_modules/@adobe/hypertext-pipeline/*.log
 /test/integration/dist
 /node_modules
+pipeline.log

@@ -13,6 +13,7 @@
 /* eslint-env node, mocha */
 
 const winston = require('winston');
+const path = require('path');
 const fs = require('fs-extra');
 const { exec } = require('child_process');
 
@@ -25,9 +26,8 @@ const logger = winston.createLogger({
 
 module.exports.logger = logger;
 
-
 const options = {
-  outDir: './dist', // The out directory to put the build files in, defaults to dist
+  outDir: path.resolve(__dirname, '../example/dist'), // The out directory to put the build files in, defaults to dist
   watch: false, // whether to watch the files and rebuild them on change, defaults to
   // process.env.NODE_ENV !== 'production'
   cache: false, // Enabled or disables caching, defaults to true
@@ -39,7 +39,8 @@ const options = {
   // minified builds yet)
   detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
   // defaults to false, reports are only printed if watch is disabled
-  rootDir: 'test/example',
+  rootDir: path.resolve(__dirname, '../example'),
+  killWorkers: true,
 };
 
 module.exports.options = options;

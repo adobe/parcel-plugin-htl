@@ -13,8 +13,12 @@
 const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
+const path = require('path');
 const winston = require('winston');
 const { options, logger } = require('./testBase');
+
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/html.htl');
 
 const params = {
   path: '/hello.md',
@@ -60,67 +64,61 @@ const params = {
 };
 
 describe('html.htl', () => {
-  beforeEach('Run Parcel programmatically on html.htl', (done) => {
-    const bundler = new Bundler('./test/example/html.htl', options);
-    bundler.bundle().then(() => done());
+  beforeEach('Run Parcel programmatically on html.htl', async () => {
+    fs.removeSync(path.resolve(__dirname, '../example/dist'));
+    const bundler = new Bundler(path.resolve(__dirname, '../example/html.htl'), options);
+    bundler.addAssetType('htl', require.resolve('../../HTLAsset.js'));
+    await bundler.bundle();
   });
 
   it('correct output files have been generated', () => {
-    assert.ok(fs.existsSync('./dist/html.js'), 'output file has been generated');
-    assert.ok(!fs.existsSync('./dist/html.htl'), 'input file has been passed through');
+    assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
+    assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
   });
 
   it('script can be required', () => {
-    assert.ok(fs.existsSync('./dist/html.js'), 'output file has been generated');
-    logger.debug(`found generated file ${require.resolve('../../dist/html.js')}`);
-
-    // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/html.js');
+    delete require.cache[require.resolve(DIST_HTML_JS)];
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
     assert.ok(script);
   });
 
   it('script has main function', () => {
     // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/html.js');
+    delete require.cache[require.resolve(DIST_HTML_JS)];
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
     assert.ok(script.main);
     assert.equal(typeof script.main, 'function');
   });
 
-  it('script can be executed', (done) => {
-    // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/html.js');
-    const result = script.main(params, { PSSST: 'secret' }, logger);
-    assert.ok(result);
-    result
-      .then((res) => {
-        assert.ok(res, 'no response received');
-        assert.ok(res.body, 'reponse has no body');
-        assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
-        done();
-      })
-      .catch(done);
+  it('script can be executed', async () => {
+    delete require.cache[require.resolve(DIST_HTML_JS)];
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
+    const res = await script.main(params, { PSSST: 'secret' }, logger);
+    assert.ok(res, 'no response received');
+    assert.ok(res.body, 'reponse has no body');
+    assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
   });
 
-  it('secrets and loggers are honored', (done) => {
-    // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/html.js');
-    let counter = 0;
+  it('secrets and loggers are honored', async () => {
+    delete require.cache[require.resolve(DIST_HTML_JS)];
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
+    let loggerInvoked = false;
     const mylogger = winston.createLogger({
       level: 'silly',
       silent: false,
       format: winston.format.printf((info) => {
-        if (counter === 0) {
-          // that's our validation that the custom log configuration gets picked up
-          done();
-        }
-        counter += 1;
-        return `${counter} ${info.level} ${info.message}`;
+        loggerInvoked = true;
+        return `${info.level} ${info.message}`;
       }),
       transports: new winston.transports.Console(),
     });
 
-    script.main(params, { SECRETS: 'there' }, mylogger).then((r) => {
-      assert.ok(r.body.indexOf('>'));
-    });
+    const r = await script.main(params, { SECRETS: 'there' }, mylogger);
+    assert.ok(r.body.indexOf('>'));
+    assert.ok(loggerInvoked);
   });
 });
