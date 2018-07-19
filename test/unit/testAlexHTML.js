@@ -91,7 +91,7 @@ describe('alex_html.htl', () => {
   });
 
   it('script can be executed', async () => {
-    // eslint-disable-next-line import/no-unresolved, global-require
+    // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     const result = await script.main(params, { PSSST: 'secret' }, logger);
     assert.ok(result);
