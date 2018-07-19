@@ -13,7 +13,11 @@
 const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
+const path = require('path');
 const { options, logger } = require('./testBase');
+
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/alex_html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/alex_html.htl');
 
 const params = {
   path: '/README.md',
@@ -58,47 +62,41 @@ const params = {
 };
 
 describe('alex_html.htl', () => {
-  beforeEach('Run Parcel programmatically on alex_html.htl', function be(done) {
-    this.timeout(5000);
-    const bundler = new Bundler('./test/example/alex_html.htl', options);
-    bundler.bundle().then(() => done());
+  beforeEach('Run Parcel programmatically on alex_html.htl', async () => {
+    fs.removeSync(path.resolve(__dirname, '../example/dist'));
+    const bundler = new Bundler(path.resolve(__dirname, '../example/alex_html.htl'), options);
+    bundler.addAssetType('htl', require.resolve('../../HTLAsset.js'));
+    await bundler.bundle();
   });
 
   it('correct output files have been generated', () => {
-    assert.ok(fs.existsSync('./dist/alex_html.js'), 'output file has been generated');
-    assert.ok(!fs.existsSync('./dist/alex_html.htl'), 'input file has been passed through');
+    assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
+    assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
   });
 
   it('script can be required', () => {
-    logger.debug(`found generated file ${require.resolve('../../dist/alex_html.js')}`);
-
-    // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/alex_html.js');
+    delete require.cache[require.resolve(DIST_HTML_JS)];
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
     assert.ok(script);
   });
 
   it('script has main function', () => {
     // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/alex_html.js');
+    delete require.cache[require.resolve(DIST_HTML_JS)];
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
     assert.ok(script.main);
     assert.equal(typeof script.main, 'function');
   });
 
-  it('script can be executed', (done) => {
-    // logger.silent = false;
-    // logger.level = 'debug';
-
+  it('script can be executed', async () => {
     // eslint-disable-next-line import/no-unresolved, global-require
-    const script = require('../../dist/alex_html.js');
-    const result = script.main(params, { PSSST: 'secret' }, logger);
+    const script = require(DIST_HTML_JS);
+    const result = await script.main(params, { PSSST: 'secret' }, logger);
     assert.ok(result);
-    result
-      .then((res) => {
-        assert.ok(res, 'no response received');
-        assert.ok(res.body, 'reponse has no body');
-        assert.ok(res.body.match(/myinjectedcontextpath/), 'response body does not contain expected result from pre.js');
-        done();
-      })
-      .catch(done);
+    assert.ok(result, 'no response received');
+    assert.ok(result.body, 'reponse has no body');
+    assert.ok(result.body.match(/myinjectedcontextpath/), 'response body does not contain expected result from pre.js');
   });
 });
