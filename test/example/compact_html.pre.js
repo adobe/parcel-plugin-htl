@@ -9,20 +9,20 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable no-console */
-
+// eslint-disable-next-line no-unused-vars
 function foo() {
   return 'bar';
 }
 
-module.exports.pre = function pre(next) {
-  console.log('I am in pre.js and I just got called');
+// the most compact way to write a pre.js:
+//
+// module.exports.pre is a function (taking next as an argument)
+// that returns a function (with payload, secrets, logger as arguments)
+// that calls next (after modifying the payload a bit)
+module.exports.pre = next => (payload, secrets, logger) => {
+  const mypayload = Object.assign({}, payload);
 
-  return (payload, secrets, logger) => {
-    const mypayload = Object.assign({}, payload);
+  mypayload.resource.foo = foo();
 
-    mypayload.resource.foo = foo();
-
-    return next(mypayload, secrets, logger);
-  };
+  return next(mypayload, secrets, logger);
 };

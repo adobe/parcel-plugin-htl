@@ -9,20 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable no-console */
-
-function foo() {
-  return 'bar';
-}
-
-module.exports.pre = function pre(next) {
-  console.log('I am in pre.js and I just got called');
-
-  return (payload, secrets, logger) => {
-    const mypayload = Object.assign({}, payload);
-
-    mypayload.resource.foo = foo();
-
-    return next(mypayload, secrets, logger);
-  };
+module.exports.foo = function foo() {
+  return 'I am from helpers.js';
 };

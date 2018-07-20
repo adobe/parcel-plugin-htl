@@ -16,8 +16,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/simple_html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/simple_html.htl');
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/require_html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/require_html.htl');
 
 const params = {
   path: '/hello.md',
@@ -62,12 +62,12 @@ const params = {
   branch: 'master',
 };
 
-describe('simple_html.htl', () => {
-  beforeEach('Run Parcel programmatically on simple_html.htl', (done) => {
+describe('require_html.htl', () => {
+  beforeEach('Run Parcel programmatically on require_html.htl', async () => {
     fs.removeSync(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/simple_html.htl'), options);
+    const bundler = new Bundler(path.resolve(__dirname, '../example/require_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../HTLAsset.js'));
-    bundler.bundle().then(() => done());
+    await bundler.bundle();
   });
 
   it('correct output files have been generated', () => {
@@ -76,12 +76,14 @@ describe('simple_html.htl', () => {
   });
 
   it('script can be required', () => {
+    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script);
   });
 
   it('script has main function', () => {
+    // eslint-disable-next-line import/no-unresolved, global-require
     delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
@@ -94,9 +96,10 @@ describe('simple_html.htl', () => {
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     const res = await script.main(params, { PSSST: 'secret' }, logger);
+
     assert.ok(res, 'no response received');
     assert.ok(res.body, 'reponse has no body');
     assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
-    assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
+    assert.ok(res.body.match(/from helpers/), 'response body does not contain expected result from pre.js');
   });
 });

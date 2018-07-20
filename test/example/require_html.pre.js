@@ -9,20 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable no-console */
-
-function foo() {
-  return 'bar';
-}
+// you can also require external modules in pre.js
+// relative imports will be inlined in the generated code
+const { foo } = require('./helpers');
 
 module.exports.pre = function pre(next) {
-  console.log('I am in pre.js and I just got called');
-
   return (payload, secrets, logger) => {
     const mypayload = Object.assign({}, payload);
-
     mypayload.resource.foo = foo();
 
-    return next(mypayload, secrets, logger);
+    return next(payload, secrets, logger);
   };
 };
