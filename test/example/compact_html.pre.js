@@ -15,14 +15,14 @@ function foo() {
 }
 
 // the most compact way to write a pre.js:
-// 
+//
 // module.exports.pre is a function (taking next as an argument)
 // that returns a function (with payload, secrets, logger as arguments)
 // that calls next (after modifying the payload a bit)
-module.exports.pre = (next) => (payload, secrets, logger) => {
+module.exports.pre = next => (payload, secrets, logger) => {
   const mypayload = Object.assign({}, payload);
 
   mypayload.resource.foo = foo();
 
   return next(mypayload, secrets, logger);
-}
+};

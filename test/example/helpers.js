@@ -11,4 +11,4 @@
  */
 module.exports.foo = function foo() {
   return 'I am from helpers.js';
-}
+};

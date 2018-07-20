@@ -11,7 +11,7 @@
  */
 
 const _ = require('lodash/fp');
-const request = require("request-promise");
+const request = require('request-promise');
 
 function collectMetadata(req, logger) {
   const options = {
@@ -19,20 +19,20 @@ function collectMetadata(req, logger) {
       req.params.repo
     }/commits?path=${req.params.path}&sha=${req.params.ref}`,
     headers: {
-      "User-Agent": "Request-Promise"
+      'User-Agent': 'Request-Promise',
     },
-    json: true
+    json: true,
   };
 
-  logger.debug("Fetching Git Metadata from " + options.uri);
+  logger.debug(`Fetching Git Metadata from ${options.uri}`);
 
   return request(options)
-    .then(metadata => {
-      logger.debug("Got git metadata");
+    .then((metadata) => {
+      logger.debug('Got git metadata');
       return metadata;
     })
-    .catch(error => {
-      logger.error("Failed to get metadata", error);
+    .catch((error) => {
+      logger.error('Failed to get metadata', error);
       return {};
     });
 }
@@ -41,16 +41,14 @@ function collectMetadata(req, logger) {
  * Extracts some committers data from the list of commits and appends the list to the resource
  * @param {RequestContext} ctx Context
  */
-function extractCommittersFromMetadata(meta, logger) {
+function extractCommittersFromMetadata(meta) {
   const res = Object.values(meta)
     .filter(commit => !!commit.author)
-    .map(commit => {
-      return {
-        avatar_url: commit.author.avatar_url,
-        display: `${commit.commit.author.name} | ${commit.commit.author.email}`
-      };
-    });
-  const uniq = _.uniqBy(JSON.stringify, res) 
+    .map(commit => ({
+      avatar_url: commit.author.avatar_url,
+      display: `${commit.commit.author.name} | ${commit.commit.author.email}`,
+    }));
+  const uniq = _.uniqBy(JSON.stringify, res);
   return uniq;
 }
 
@@ -75,33 +73,30 @@ function extractLastModifiedFromMetadata(meta = [], logger) {
 module.exports.pre = next => (payload, secrets, logger) => {
   const mypayload = Object.assign({}, payload);
 
-  logger.debug("setting context path");
-  mypayload.resource.contextPath = "myinjectedcontextpath";
+  logger.debug('setting context path');
+  mypayload.resource.contextPath = 'myinjectedcontextpath';
 
-  logger.debug("collecting metadata");
+  logger.debug('collecting metadata');
 
   try {
     return collectMetadata(payload.request, logger)
-      .then(gitmeta => {
-        logger.debug("Metadata has arrived");
+      .then((gitmeta) => {
+        logger.debug('Metadata has arrived');
         mypayload.resource.gitmetadata = gitmeta;
         return gitmeta;
       })
-      .then(gitmeta => {
+      .then((gitmeta) => {
         const committers = extractCommittersFromMetadata(gitmeta, logger);
         mypayload.resource.committers = committers;
         return gitmeta;
       })
-      .then(gitmeta => {
+      .then((gitmeta) => {
         const lastMod = extractLastModifiedFromMetadata(gitmeta, logger);
         mypayload.resource.lastModified = lastMod;
         return gitmeta;
       })
-      .then(() => {
-        // finally
-        return next(mypayload, secrets, logger);
-      })
-      .catch(e => {
+      .then(() => next(mypayload, secrets, logger))
+      .catch((e) => {
         logger.error(e);
         return { error: e };
       });

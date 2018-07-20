@@ -14,7 +14,6 @@
 const { foo } = require('./helpers');
 
 module.exports.pre = function pre(next) {
-
   return (payload, secrets, logger) => {
     const mypayload = Object.assign({}, payload);
     mypayload.resource.foo = foo();
