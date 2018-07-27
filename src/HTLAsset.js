@@ -47,41 +47,10 @@ class HTLAsset extends JSAsset {
       `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`,
     );
 
-    // return super.parse(this.contents);
-    const body = `
-            ${this.contents}
-
-            const { pipe } = require('${pipe}');
-            const main = module.exports.main;
-            const { pre } = require('${pre}');
-            const wrap = require('@adobe/openwhisk-loggly-wrapper');
-            //this gets called by openwhisk
-
-            function wrapped(params, secrets = {}, logger) {
-              const runthis = (p, s, l) => {
-                const next = (p, s, l) => {
-                  if (s.PSSST) {
-                    console.log("You managed to smuggle in a secret message: " + s.PSSST);
-                  }
-                  const myres = pre(main)(p, s, l).then(resobj => {
-                    return { response: resobj };
-                  });
-
-                  return myres;
-                }
-
-                const mypipe = pipe(next, p, s, l);
-
-                return mypipe;
-              };
-
-              const owwrapped = wrap(runthis, params, secrets, logger);
-
-              return owwrapped;
-            }
-
-            module.exports.main = wrapped;
-        `;
+    let body = fs.readFileSync(path.join(__dirname, 'OutputTemplate.js'), 'utf-8');
+    body = body.replace(/^\s*\/\/\s*CONTENTS\s*$/m, `\n${this.contents}`);
+    body = body.replace(/MOD_PIPE/, pipe);
+    body = body.replace(/MOD_PRE/, pre);
     return super.parse(body);
   }
 
