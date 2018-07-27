@@ -9,8 +9,20 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-module.exports = (bundler) => {
-  // process HTL files by .htl extension
-  bundler.addAssetType('htl', require.resolve('./HTLPreAsset.js'));
-  bundler.addAssetType('htl-processed', require.resolve('./HTLAsset.js'));
-};
+const HTMLAsset = require('parcel-bundler/src/assets/HTMLAsset');
+
+class HTLPreAsset extends HTMLAsset {
+  constructor(name, options) {
+    super(name, options);
+    this.type = 'htl-processed';
+  }
+
+  async postProcess(generated) {
+    const v = await super.postProcess(generated);
+    console.log('post: %j -> %j', generated, v);
+    v[0].type = 'htl-processed';
+    return v;
+  }
+}
+
+module.exports = HTLPreAsset;
