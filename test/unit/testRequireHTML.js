@@ -66,7 +66,7 @@ describe('require_html.htl', () => {
   beforeEach('Run Parcel programmatically on require_html.htl', async () => {
     fs.removeSync(path.resolve(__dirname, '../example/dist'));
     const bundler = new Bundler(path.resolve(__dirname, '../example/require_html.htl'), options);
-    bundler.addAssetType('htl', require.resolve('../../HTLAsset.js'));
+    bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
     await bundler.bundle();
   });
 
@@ -98,7 +98,7 @@ describe('require_html.htl', () => {
     const res = await script.main(params, { PSSST: 'secret' }, logger);
 
     assert.ok(res, 'no response received');
-    assert.ok(res.body, 'reponse has no body');
+    assert.ok(res.body, 'response has no body');
     assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
     assert.ok(res.body.match(/from helpers/), 'response body does not contain expected result from pre.js');
   });

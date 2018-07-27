@@ -13,7 +13,7 @@
 /* global describe, it */
 
 const assert = require('assert');
-const resolver = require('../../resolver');
+const resolver = require('../../src/resolver.js');
 
 describe('Test plain extension resolution', () => {
   it('html.htl extension', () => {
