@@ -11,7 +11,7 @@
  */
 const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
-const JSAsset = require('parcel-bundler/src/assets/JSAsset');
+const Asset = require('parcel-bundler/src/Asset');
 const fs = require('fs');
 const path = require('path');
 const logger = require('parcel-bundler/src/Logger');
@@ -19,23 +19,20 @@ const resolver = require('./resolver');
 
 const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
-class HTLAsset extends JSAsset {
+class HTLAsset extends Asset {
   constructor(name, options) {
     super(name, options);
     this.type = 'js';
   }
 
-  async parse(code) {
-    // TODO
+  async generate() {
     const compiler = new Compiler()
       .withOutputDirectory('')
       .includeRuntime(true)
       .withRuntimeGlobalName('it');
 
-    this.contents = compiler.compileToString(code);
-
+    const code = compiler.compileToString(this.contents);
     const rootname = this.name.replace(/\.[^.]+$/, '');
-
     const extension = resolver.extension(this.basename);
 
     const pipe = this.getPreprocessor(
@@ -48,10 +45,14 @@ class HTLAsset extends JSAsset {
     );
 
     let body = fs.readFileSync(path.join(__dirname, 'OutputTemplate.js'), 'utf-8');
-    body = body.replace(/^\s*\/\/\s*CONTENTS\s*$/m, `\n${this.contents}`);
+    body = body.replace(/^\s*\/\/\s*CONTENTS\s*$/m, `\n${code}`);
     body = body.replace(/MOD_PIPE/, pipe);
     body = body.replace(/MOD_PRE/, pre);
-    return super.parse(body);
+    console.log('generated: ', body);
+    return [{
+      type: 'js',
+      value: body,
+    }];
   }
 
   getPreprocessor(name, fallback) {
@@ -69,6 +70,7 @@ class HTLAsset extends JSAsset {
 
     return DEFAULT_PIPELINE;
   }
+
 }
 
 module.exports = HTLAsset;

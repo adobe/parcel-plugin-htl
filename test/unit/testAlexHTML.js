@@ -14,10 +14,13 @@ const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const path = require('path');
+const HTLPlugin = require('../../src/index');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/alex_html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/alex_html.htl');
+const TEST_HTL = path.resolve(__dirname, '..', 'example', 'alex_html.htl');
+const DIST_DIR = path.resolve(__dirname, '..', 'example', 'dist');
+const DIST_HTML_JS = path.resolve(DIST_DIR, 'alex_html.js');
+const DIST_HTML_HTL = path.resolve(DIST_DIR, 'alex_html.htl');
 
 const params = {
   path: '/README.md',
@@ -63,9 +66,9 @@ const params = {
 
 describe('alex_html.htl', () => {
   beforeEach('Run Parcel programmatically on alex_html.htl', async () => {
-    await fs.remove(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/alex_html.htl'), options);
-    bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
+    await fs.remove(DIST_DIR);
+    const bundler = new Bundler(TEST_HTL, options);
+    HTLPlugin(bundler);
     await bundler.bundle();
   });
 

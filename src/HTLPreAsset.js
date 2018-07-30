@@ -17,11 +17,24 @@ class HTLPreAsset extends HTMLAsset {
     this.type = 'htl-processed';
   }
 
+  addURLDependency(url, from = this.name, opts) {
+    // we only support relative addressed dependencies. parcel would try to resolve those
+    if (url && (url[0] === '/' || url[0] === '$')) {
+      return url;
+    }
+    return super.addURLDependency(url, from, opts);
+  }
+
   async postProcess(generated) {
     const v = await super.postProcess(generated);
-    console.log('post: %j -> %j', generated, v);
     v[0].type = 'htl-processed';
     return v;
+  }
+
+  generateBundleName() {
+    // use 'js' as extension in order to generate correct file name
+    const b = super.generateBundleName();
+    return `${b}.js`;
   }
 }
 
