@@ -48,7 +48,6 @@ class HTLAsset extends Asset {
     body = body.replace(/^\s*\/\/\s*CONTENTS\s*$/m, `\n${code}`);
     body = body.replace(/MOD_PIPE/, pipe);
     body = body.replace(/MOD_PRE/, pre);
-    console.log('generated: ', body);
     return [{
       type: 'js',
       value: body,
