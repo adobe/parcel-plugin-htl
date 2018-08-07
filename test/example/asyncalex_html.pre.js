@@ -83,7 +83,6 @@ async function pre(payload, config) {
     payload.resource.gitmetadata = gitmeta;
     payload.resource.committers = await extractCommittersFromMetadata(gitmeta, logger);
     payload.resource.lastModified = await extractLastModifiedFromMetadata(gitmeta, logger);
-
   } catch (e) {
     logger.error(e);
     throw e;
