@@ -19,14 +19,22 @@ function wrap(main) {
   const { pre } = require('MOD_PRE');
   const owwrapper = require('@adobe/openwhisk-loggly-wrapper');
 
+  const _isFunction = (fn) => !!(fn && fn.constructor && fn.call && fn.apply);
+
   // this gets called by openwhisk
   return function wrapped(params, secrets = {}, logger) {
     const runthis = (p, s, l) => {
       const next = (p, s, l) => {
-        if (s.PSSST) {
-          console.log(`You managed to smuggle in a secret message: ${s.PSSST}`);
+        function cont(next) {
+          const config  = Object.assign({}, secrets, { logger });
+          const ret = pre(p, config);
+          if (ret && _isFunction(ret.then)) {
+            return ret.then(() => next(p, s, l));
+          }
+          return next(p, s, l);
         }
-        return pre(main)(p, s, l).then(resobj => ({ response: resobj }));
+        // return pre(main)(p, s, l).then(resobj => ({ response: resobj }));
+        return cont(main).then(resobj => ({ response: resobj }));
       };
       return pipe(next, p, s, l);
     };

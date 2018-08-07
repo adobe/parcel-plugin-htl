@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+/* eslint-disable no-param-reassign */
+
 const _ = require('lodash/fp');
 const request = require('request-promise');
 
@@ -66,28 +68,26 @@ async function extractLastModifiedFromMetadata(meta = [], logger) {
 // module.exports.pre is a function (taking next as an argument)
 // that returns a function (with payload, secrets, logger as arguments)
 // that calls next (after modifying the payload a bit)
-function pre(next) {
-  return async function process(payload, secrets, logger) {
-    try {
-      const myPayload = Object.assign({}, payload);
+async function pre(payload, config) {
+  const { logger } = config;
+  try {
+    const myPayload = Object.assign({}, payload);
 
-      logger.debug('setting context path');
-      myPayload.resource.contextPath = 'myinjectedcontextpath';
+    logger.debug('setting context path');
+    myPayload.resource.contextPath = 'myinjectedcontextpath';
 
-      logger.debug('collecting metadata');
-      const gitmeta = await collectMetadata(payload.request, logger);
+    logger.debug('collecting metadata');
+    const gitmeta = await collectMetadata(payload.request, logger);
 
-      logger.debug('Metadata has arrived');
-      myPayload.resource.gitmetadata = gitmeta;
-      myPayload.resource.committers = await extractCommittersFromMetadata(gitmeta, logger);
-      myPayload.resource.lastModified = await extractLastModifiedFromMetadata(gitmeta, logger);
+    logger.debug('Metadata has arrived');
+    payload.resource.gitmetadata = gitmeta;
+    payload.resource.committers = await extractCommittersFromMetadata(gitmeta, logger);
+    payload.resource.lastModified = await extractLastModifiedFromMetadata(gitmeta, logger);
 
-      return next(myPayload, secrets, logger);
-    } catch (e) {
-      logger.error(e);
-      return { error: e };
-    }
-  };
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 module.exports.pre = pre;

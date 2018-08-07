@@ -9,21 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 /* eslint-disable */
 
-// you can also require external modules in pre.js
-// relative imports will be inlined in the generated code
-const { foo } = require('./helpers');
-
 /**
- * The 'pre' function that is executed before the HTML is rendered.
+ * The 'pre' function that is executed before the HTML is rendered
  * @param payload The current payload of processing pipeline
  * @param payload.resource The content resource
  */
-function pre(payload) {
+function pre(payload, config) {
 
-  payload.resource.foo = foo();
+  config.logger.debug('pre was here!');
+  payload.resource.foo = 'bar';
 
 }
 
