@@ -11,17 +11,19 @@
  */
 /* eslint-disable  */
 
-function wait(time) {
+/**
+ * Example function that simulates requesting data asynchronously.
+ * @returns {Promise<any>} promise that resolves with 'bar'.
+ */
+function requestSomething() {
   return new Promise(resolve => {
-    setTimeout(resolve, time);
+    setTimeout(resolve, 100, 'bar');
   })
 }
 
-// async pre
-
+// async pre example
 async function pre(payload) {
-  await wait(100);
-  payload.resource.foo = 'bar';
+  payload.resource.foo = await requestSomething();
 }
 
 module.exports.pre = pre;

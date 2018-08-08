@@ -16,8 +16,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/alex_html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/alex_html.htl');
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/helpx_html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/helpx_html.htl');
 
 const params = {
   path: '/README.md',
@@ -61,12 +61,13 @@ const params = {
   branch: 'master',
 };
 
-describe('alex_html.htl', () => {
-  beforeEach('Run Parcel programmatically on alex_html.htl', async () => {
+describe('helpx_html.htl', () => {
+  beforeEach('Run Parcel programmatically on helpx_html.htl', async () => {
     await fs.remove(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/alex_html.htl'), options);
+    const bundler = new Bundler(path.resolve(__dirname, '../example/helpx_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
     await bundler.bundle();
+    delete require.cache[require.resolve(DIST_HTML_JS)];
   });
 
   it('correct output files have been generated', () => {
@@ -75,15 +76,12 @@ describe('alex_html.htl', () => {
   });
 
   it('script can be required', () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script);
   });
 
   it('script has main function', () => {
-    // eslint-disable-next-line import/no-unresolved, global-require
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script.main);

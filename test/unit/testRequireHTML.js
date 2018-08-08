@@ -64,10 +64,11 @@ const params = {
 
 describe('require_html.htl', () => {
   beforeEach('Run Parcel programmatically on require_html.htl', async () => {
-    fs.removeSync(path.resolve(__dirname, '../example/dist'));
+    await fs.remove(path.resolve(__dirname, '../example/dist'));
     const bundler = new Bundler(path.resolve(__dirname, '../example/require_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
     await bundler.bundle();
+    delete require.cache[require.resolve(DIST_HTML_JS)];
   });
 
   it('correct output files have been generated', () => {
@@ -76,15 +77,12 @@ describe('require_html.htl', () => {
   });
 
   it('script can be required', () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script);
   });
 
   it('script has main function', () => {
-    // eslint-disable-next-line import/no-unresolved, global-require
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script.main);
@@ -92,7 +90,6 @@ describe('require_html.htl', () => {
   });
 
   it('script can be executed', async () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     const res = await script.main(params, { PSSST: 'secret' }, logger);
