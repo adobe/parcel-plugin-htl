@@ -16,9 +16,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/simple_html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/simple_html.htl');
-
 const params = {
   path: '/hello.md',
   __ow_method: 'get',
@@ -62,40 +59,55 @@ const params = {
   branch: 'master',
 };
 
-describe('simple_html.htl', () => {
-  beforeEach('Run Parcel programmatically on simple_html.htl', async () => {
-    await fs.remove(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/simple_html.htl'), options);
-    bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
-    await bundler.bundle();
-    delete require.cache[require.resolve(DIST_HTML_JS)];
-  });
+const TEST_SCRIPTS = [
+  'async_html',
+  'promise_html',
+  'require_html',
+  'simple_html',
+  'return_simple_html',
+];
 
-  it('correct output files have been generated', () => {
-    assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
-    assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
-  });
+describe('Simple Tests', () => {
+  TEST_SCRIPTS.forEach((testScript) => {
+    const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
+    const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
 
-  it('script can be required', () => {
-    // eslint-disable-next-line import/no-dynamic-require,global-require
-    const script = require(DIST_HTML_JS);
-    assert.ok(script);
-  });
+    describe(`Testing ${testScript}`, () => {
+      beforeEach(`Run Parcel programmatically on ${testScript}.htl`, async () => {
+        await fs.remove(path.resolve(__dirname, '../example/dist'));
+        const bundler = new Bundler(path.resolve(__dirname, `../example/${testScript}.htl`), options);
+        bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
+        await bundler.bundle();
+        delete require.cache[require.resolve(DIST_HTML_JS)];
+      });
 
-  it('script has main function', () => {
-    // eslint-disable-next-line import/no-dynamic-require,global-require
-    const script = require(DIST_HTML_JS);
-    assert.ok(script.main);
-    assert.equal(typeof script.main, 'function');
-  });
+      it('correct output files have been generated', () => {
+        assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
+        assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
+      });
 
-  it('script can be executed', async () => {
-    // eslint-disable-next-line import/no-dynamic-require,global-require
-    const script = require(DIST_HTML_JS);
-    const res = await script.main(params, { PSSST: 'secret' }, logger);
-    assert.ok(res, 'no response received');
-    assert.ok(res.body, 'response has no body');
-    assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
-    assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
+      it('script can be required', () => {
+        // eslint-disable-next-line import/no-dynamic-require,global-require
+        const script = require(DIST_HTML_JS);
+        assert.ok(script);
+      });
+
+      it('script has main function', () => {
+        // eslint-disable-next-line import/no-dynamic-require,global-require
+        const script = require(DIST_HTML_JS);
+        assert.ok(script.main);
+        assert.equal(typeof script.main, 'function');
+      });
+
+      it('script can be executed', async () => {
+        // eslint-disable-next-line import/no-dynamic-require,global-require
+        const script = require(DIST_HTML_JS);
+        const res = await script.main(params, { PSSST: 'secret' }, logger);
+        assert.ok(res, 'no response received');
+        assert.ok(res.body, 'response has no body');
+        assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
+        assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
+      });
+    });
   });
 });

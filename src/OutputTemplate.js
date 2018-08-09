@@ -29,9 +29,9 @@ function wrap(main) {
           const config  = Object.assign({}, secrets, { logger });
           const ret = pre(p, config);
           if (ret && _isFunction(ret.then)) {
-            return ret.then(() => next(p, s, l));
+            return ret.then((pp) => next(pp || p, s, l));
           }
-          return next(p, s, l);
+          return next(ret || p, s, l);
         }
         return cont(main).then(resobj => ({ response: resobj }));
       };

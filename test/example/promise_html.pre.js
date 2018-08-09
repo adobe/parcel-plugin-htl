@@ -21,7 +21,11 @@ function requestSomething() {
   })
 }
 
-// promise pre example
+/**
+ * Example of the 'pre' function that returns a Promise.
+ * @param payload The current payload of processing pipeline
+ * @return {Promise} When resolved, continues the rendering pipeline
+ */
 function pre(payload) {
   return requestSomething().then((value) => {
     payload.resource.foo = value;
