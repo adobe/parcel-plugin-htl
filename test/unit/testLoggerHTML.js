@@ -11,14 +11,14 @@
  */
 /* eslint-env mocha */
 const assert = require('assert');
+const sinon = require('sinon');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const path = require('path');
-const winston = require('winston');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/html.htl');
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/logger_html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/logger_html.htl');
 
 const params = {
   path: '/hello.md',
@@ -63,10 +63,10 @@ const params = {
   branch: 'master',
 };
 
-describe('html.htl', () => {
-  beforeEach('Run Parcel programmatically on html.htl', async () => {
+describe('logger_html.htl', () => {
+  beforeEach('Run Parcel programmatically on logger_html.htl', async () => {
     await fs.remove(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/html.htl'), options);
+    const bundler = new Bundler(path.resolve(__dirname, '../example/logger_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
     await bundler.bundle();
     delete require.cache[require.resolve(DIST_HTML_JS)];
@@ -91,30 +91,15 @@ describe('html.htl', () => {
   });
 
   it('script can be executed', async () => {
+    const spy = sinon.spy(logger, 'debug');
+
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     const res = await script.main(params, { PSSST: 'secret' }, logger);
     assert.ok(res, 'no response received');
     assert.ok(res.body, 'response has no body');
-    assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
-  });
-
-  it('secrets and loggers are honored', async () => {
-    // eslint-disable-next-line import/no-dynamic-require,global-require
-    const script = require(DIST_HTML_JS);
-    let loggerInvoked = false;
-    const mylogger = winston.createLogger({
-      level: 'silly',
-      silent: false,
-      format: winston.format.printf((info) => {
-        loggerInvoked = true;
-        return `${info.level} ${info.message}`;
-      }),
-      transports: new winston.transports.Console(),
-    });
-
-    const r = await script.main(params, { SECRETS: 'there' }, mylogger);
-    assert.ok(r.body.indexOf('>'));
-    assert.ok(loggerInvoked);
+    assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
+    assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
+    assert(spy.calledWith('pre was here!'));
   });
 });

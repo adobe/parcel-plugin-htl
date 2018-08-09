@@ -63,11 +63,12 @@ const params = {
 };
 
 describe('simple_html.htl', () => {
-  beforeEach('Run Parcel programmatically on simple_html.htl', (done) => {
-    fs.removeSync(path.resolve(__dirname, '../example/dist'));
+  beforeEach('Run Parcel programmatically on simple_html.htl', async () => {
+    await fs.remove(path.resolve(__dirname, '../example/dist'));
     const bundler = new Bundler(path.resolve(__dirname, '../example/simple_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
-    bundler.bundle().then(() => done());
+    await bundler.bundle();
+    delete require.cache[require.resolve(DIST_HTML_JS)];
   });
 
   it('correct output files have been generated', () => {
@@ -82,7 +83,6 @@ describe('simple_html.htl', () => {
   });
 
   it('script has main function', () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script.main);
@@ -90,7 +90,6 @@ describe('simple_html.htl', () => {
   });
 
   it('script can be executed', async () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     const res = await script.main(params, { PSSST: 'secret' }, logger);

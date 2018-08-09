@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+/* eslint-disable no-param-reassign */
+
 const _ = require('lodash/fp');
 const request = require('request-promise');
 
@@ -70,11 +72,11 @@ function extractLastModifiedFromMetadata(meta = [], logger) {
 // module.exports.pre is a function (taking next as an argument)
 // that returns a function (with payload, secrets, logger as arguments)
 // that calls next (after modifying the payload a bit)
-module.exports.pre = next => (payload, secrets, logger) => {
-  const mypayload = Object.assign({}, payload);
+module.exports.pre = (payload, config) => {
+  const { logger } = config;
 
   logger.debug('setting context path');
-  mypayload.resource.contextPath = 'myinjectedcontextpath';
+  payload.resource.contextPath = 'myinjectedcontextpath';
 
   logger.debug('collecting metadata');
 
@@ -82,20 +84,19 @@ module.exports.pre = next => (payload, secrets, logger) => {
     return collectMetadata(payload.request, logger)
       .then((gitmeta) => {
         logger.debug('Metadata has arrived');
-        mypayload.resource.gitmetadata = gitmeta;
+        payload.resource.gitmetadata = gitmeta;
         return gitmeta;
       })
       .then((gitmeta) => {
         const committers = extractCommittersFromMetadata(gitmeta, logger);
-        mypayload.resource.committers = committers;
+        payload.resource.committers = committers;
         return gitmeta;
       })
       .then((gitmeta) => {
         const lastMod = extractLastModifiedFromMetadata(gitmeta, logger);
-        mypayload.resource.lastModified = lastMod;
+        payload.resource.lastModified = lastMod;
         return gitmeta;
       })
-      .then(() => next(mypayload, secrets, logger))
       .catch((e) => {
         logger.error(e);
         return { error: e };

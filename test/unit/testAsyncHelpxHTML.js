@@ -14,17 +14,15 @@ const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const path = require('path');
-const winston = require('winston');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/html.htl');
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/asynchelpx_html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/asynchelpx_html.htl');
 
 const params = {
-  path: '/hello.md',
+  path: '/README.md',
   __ow_method: 'get',
-  owner: 'trieloff',
-  SECRET: '🎶 agent man',
+  owner: 'Adobe-Marketing-Cloud',
   __ow_headers: {
     'X-Forwarded-Port': '443',
     'X-CDN-Request-Id': '2a208a89-e071-44cf-aee9-220880da4c1e',
@@ -57,16 +55,16 @@ const params = {
     'User-Agent':
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
   },
-  repo: 'soupdemo',
+  repo: 'reactor-user-docs',
   ref: 'master',
   selector: 'md',
   branch: 'master',
 };
 
-describe('html.htl', () => {
-  beforeEach('Run Parcel programmatically on html.htl', async () => {
+describe('asynchelpx_html.htl', () => {
+  beforeEach('Run Parcel programmatically on alex_html.htl', async () => {
     await fs.remove(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/html.htl'), options);
+    const bundler = new Bundler(path.resolve(__dirname, '../example/asynchelpx_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
     await bundler.bundle();
     delete require.cache[require.resolve(DIST_HTML_JS)];
@@ -93,28 +91,10 @@ describe('html.htl', () => {
   it('script can be executed', async () => {
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
-    const res = await script.main(params, { PSSST: 'secret' }, logger);
-    assert.ok(res, 'no response received');
-    assert.ok(res.body, 'response has no body');
-    assert.ok(res.body.match(/Welcome/), 'response body does not contain expected result');
-  });
-
-  it('secrets and loggers are honored', async () => {
-    // eslint-disable-next-line import/no-dynamic-require,global-require
-    const script = require(DIST_HTML_JS);
-    let loggerInvoked = false;
-    const mylogger = winston.createLogger({
-      level: 'silly',
-      silent: false,
-      format: winston.format.printf((info) => {
-        loggerInvoked = true;
-        return `${info.level} ${info.message}`;
-      }),
-      transports: new winston.transports.Console(),
-    });
-
-    const r = await script.main(params, { SECRETS: 'there' }, mylogger);
-    assert.ok(r.body.indexOf('>'));
-    assert.ok(loggerInvoked);
+    const result = await script.main(params, { PSSST: 'secret' }, logger);
+    assert.ok(result);
+    assert.ok(result, 'no response received');
+    assert.ok(result.body, 'response has no body');
+    assert.ok(result.body.match(/myinjectedcontextpath/), 'response body does not contain expected result from pre.js');
   });
 });

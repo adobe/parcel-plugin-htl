@@ -9,22 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-/* eslint-disable */
-
-// you can also require external modules in pre.js
-// relative imports will be inlined in the generated code
-const { foo } = require('./helpers');
+/* eslint-disable  */
 
 /**
- * The 'pre' function that is executed before the HTML is rendered.
- * @param payload The current payload of processing pipeline
- * @param payload.resource The content resource
+ * Example function that simulates requesting data asynchronously.
+ * @returns {Promise<any>} promise that resolves with 'bar'.
  */
-function pre(payload) {
+function requestSomething() {
+  return new Promise(resolve => {
+    setTimeout(resolve, 100, 'bar');
+  })
+}
 
-  payload.resource.foo = foo();
-
+// async pre example
+async function pre(payload) {
+  payload.resource.foo = await requestSomething();
 }
 
 module.exports.pre = pre;

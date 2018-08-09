@@ -16,8 +16,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const { options, logger } = require('./testBase');
 
-const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/compact_html.js');
-const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/compact_html.htl');
+const DIST_HTML_JS = path.resolve(__dirname, '../example/dist/async_html.js');
+const DIST_HTML_HTL = path.resolve(__dirname, '../example/dist/async_html.htl');
 
 const params = {
   path: '/hello.md',
@@ -62,12 +62,13 @@ const params = {
   branch: 'master',
 };
 
-describe('compact_html.htl', () => {
-  beforeEach('Run Parcel programmatically on compact_html.htl', async () => {
-    fs.removeSync(path.resolve(__dirname, '../example/dist'));
-    const bundler = new Bundler(path.resolve(__dirname, '../example/compact_html.htl'), options);
+describe('async_html.htl', () => {
+  beforeEach('Run Parcel programmatically on async_html.htl', async () => {
+    await fs.remove(path.resolve(__dirname, '../example/dist'));
+    const bundler = new Bundler(path.resolve(__dirname, '../example/async_html.htl'), options);
     bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
     await bundler.bundle();
+    delete require.cache[require.resolve(DIST_HTML_JS)];
   });
 
   it('correct output files have been generated', () => {
@@ -76,15 +77,12 @@ describe('compact_html.htl', () => {
   });
 
   it('script can be required', () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script);
   });
 
   it('script has main function', () => {
-    // eslint-disable-next-line import/no-unresolved, global-require
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     assert.ok(script.main);
@@ -92,7 +90,6 @@ describe('compact_html.htl', () => {
   });
 
   it('script can be executed', async () => {
-    delete require.cache[require.resolve(DIST_HTML_JS)];
     // eslint-disable-next-line import/no-dynamic-require,global-require
     const script = require(DIST_HTML_JS);
     const res = await script.main(params, { PSSST: 'secret' }, logger);

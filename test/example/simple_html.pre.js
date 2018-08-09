@@ -9,20 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable no-console */
+/* eslint-disable */
 
-function foo() {
-  return 'bar';
+/**
+ * The 'pre' function that is executed before the HTML is rendered
+ * @param payload The current payload of processing pipeline
+ * @param payload.resource The content resource
+ */
+function pre(payload) {
+
+  payload.resource.foo = 'bar';
+
 }
 
-module.exports.pre = function pre(next) {
-  console.log('I am in pre.js and I just got called');
-
-  return (payload, secrets, logger) => {
-    const mypayload = Object.assign({}, payload);
-
-    mypayload.resource.foo = foo();
-
-    return next(mypayload, secrets, logger);
-  };
-};
+module.exports.pre = pre;

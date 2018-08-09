@@ -9,20 +9,18 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-// eslint-disable-next-line no-unused-vars
-function foo() {
-  return 'bar';
+/* eslint-disable */
+
+/**
+ * The 'pre' function that is executed before the HTML is rendered
+ * @param payload The current payload of processing pipeline
+ * @param payload.resource The content resource
+ */
+function pre(payload, config) {
+
+  config.logger.debug('pre was here!');
+  payload.resource.foo = 'bar';
+
 }
 
-// the most compact way to write a pre.js:
-//
-// module.exports.pre is a function (taking next as an argument)
-// that returns a function (with payload, secrets, logger as arguments)
-// that calls next (after modifying the payload a bit)
-module.exports.pre = next => (payload, secrets, logger) => {
-  const mypayload = Object.assign({}, payload);
-
-  mypayload.resource.foo = foo();
-
-  return next(mypayload, secrets, logger);
-};
+module.exports.pre = pre;
