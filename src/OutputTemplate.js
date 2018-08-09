@@ -33,7 +33,6 @@ function wrap(main) {
           }
           return next(p, s, l);
         }
-        // return pre(main)(p, s, l).then(resobj => ({ response: resobj }));
         return cont(main).then(resobj => ({ response: resobj }));
       };
       return pipe(next, p, s, l);
