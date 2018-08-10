@@ -90,7 +90,17 @@ describe('logger_html.htl', () => {
     assert.equal(typeof script.main, 'function');
   });
 
-  it('script can be executed', async () => {
+  it('script can be executed with default logger', async () => {
+    // eslint-disable-next-line import/no-dynamic-require,global-require
+    const script = require(DIST_HTML_JS);
+    const res = await script.main(params, { PSSST: 'secret' });
+    assert.ok(res, 'no response received');
+    assert.ok(res.body, 'response has no body');
+    assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
+    assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
+  });
+
+  it('script logs correctly', async () => {
     const spy = sinon.spy(logger, 'debug');
 
     // eslint-disable-next-line import/no-dynamic-require,global-require
