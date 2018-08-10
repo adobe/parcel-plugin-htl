@@ -61,7 +61,9 @@ const params = {
 
 const TEST_SCRIPTS = [
   'async_html',
+  'return_async_html',
   'promise_html',
+  'return_promise_html',
   'require_html',
   'simple_html',
   'return_simple_html',

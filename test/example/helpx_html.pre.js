@@ -95,7 +95,6 @@ module.exports.pre = (payload, config) => {
       .then((gitmeta) => {
         const lastMod = extractLastModifiedFromMetadata(gitmeta, logger);
         payload.resource.lastModified = lastMod;
-        return gitmeta;
       })
       .catch((e) => {
         logger.error(e);
