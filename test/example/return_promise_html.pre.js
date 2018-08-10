@@ -22,11 +22,18 @@ function requestSomething() {
 }
 
 /**
- * Example of an async 'pre' function.
+ * Example of the 'pre' function that returns a Promise.
  * @param payload The current payload of processing pipeline
+ * @return {Promise} When resolved, continues the rendering pipeline with the resolved payload.
  */
-async function pre(payload) {
-  payload.resource.foo = await requestSomething();
+function pre(payload) {
+  const myPayload = JSON.parse(JSON.stringify(payload));
+  payload.resource.foo = 'testing - should be ignored';
+
+  return requestSomething().then((value) => {
+    myPayload.resource.foo = value;
+    return myPayload;
+  });
 }
 
 module.exports.pre = pre;

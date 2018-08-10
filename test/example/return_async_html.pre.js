@@ -24,9 +24,14 @@ function requestSomething() {
 /**
  * Example of an async 'pre' function.
  * @param payload The current payload of processing pipeline
+ * @return The new payload
  */
 async function pre(payload) {
-  payload.resource.foo = await requestSomething();
+  const myPayload = JSON.parse(JSON.stringify(payload));
+  payload.resource.foo = 'testing - should be ignored';
+
+  myPayload.resource.foo = await requestSomething();
+  return myPayload;
 }
 
 module.exports.pre = pre;

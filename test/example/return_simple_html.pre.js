@@ -9,6 +9,20 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-module.exports.foo = function foo() {
-  return 'bar';
-};
+/* eslint-disable */
+
+/**
+ * The 'pre' function that is executed before the HTML is rendered
+ * @param payload The current payload of processing pipeline
+ * @param payload.resource The content resource
+ * @return the new payload
+ */
+function pre(payload) {
+  const myPayload = JSON.parse(JSON.stringify(payload));
+  payload.resource.foo = 'testing - should be ignored';
+
+  myPayload.resource.foo = 'bar';
+  return myPayload;
+}
+
+module.exports.pre = pre;
