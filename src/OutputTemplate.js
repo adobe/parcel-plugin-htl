@@ -26,7 +26,7 @@ function wrap(main) {
     const runthis = (p, s, l) => {
       const next = (p, s, l) => {
         function cont(next) {
-          const config  = Object.assign({}, secrets, { logger });
+          const config  = Object.assign({}, s, { logger: l });
           const ret = pre(p, config);
           if (ret && _isFunction(ret.then)) {
             return ret.then((pp) => next(pp || p, s, l));
