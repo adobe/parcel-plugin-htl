@@ -12,5 +12,8 @@
 module.exports = (bundler) => {
   // process HTL files by .htl extension
   bundler.addAssetType('htl', require.resolve('./HTLAsset'));
-  bundler.addAssetType('helix-js', require.resolve('./HelixJSAsset'));
+  // do not re-register asset if already defined.
+  if (!bundler.parser.extensions['.helix-js']) {
+    bundler.addAssetType('helix-js', require.resolve('./HelixJSAsset'));
+  }
 };
