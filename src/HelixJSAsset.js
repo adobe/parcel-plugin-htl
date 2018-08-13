@@ -14,7 +14,8 @@
 const Asset = require('parcel-bundler/src/Asset');
 
 /**
- * Simple pass-through asset that converts the helix-js type to JS. Needed for testing.
+ * Simple pass-through asset that converts the helix-js type to JS. Needed when using the plugin
+ * standalone (i.e, w/o helix cli).
  */
 class HelixJSAsset extends Asset {
   constructor(name, options) {

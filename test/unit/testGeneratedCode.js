@@ -14,6 +14,7 @@ const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const path = require('path');
+const Plugin = require('../../src/index.js');
 
 const BUNDLER_OPTIONS = {
   outDir: path.resolve(__dirname, '../example/dist'), // The out directory to put the build files in, defaults to dist
@@ -45,8 +46,7 @@ describe('Generated Code Tests', () => {
       before(`Run Parcel programmatically on ${testScript}.htl`, async () => {
         await fs.remove(path.resolve(__dirname, '../example/dist'));
         const bundler = new Bundler(path.resolve(__dirname, `../example/${testScript}.htl`), BUNDLER_OPTIONS);
-        bundler.addAssetType('htl', require.resolve('../../src/HTLAsset.js'));
-        bundler.addAssetType('helix-js', require.resolve('./HelixJSAsset.js'));
+        Plugin(bundler);
         await bundler.bundle();
         delete require.cache[require.resolve(DIST_HTML_JS)];
       });
