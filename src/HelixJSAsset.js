@@ -9,20 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable */
+
+
+const Asset = require('parcel-bundler/src/Asset');
 
 /**
- * The 'pre' function that is executed before the HTML is rendered
- * @param payload The current payload of processing pipeline
- * @param payload.resource The content resource
- * @return the new payload
+ * Simple pass-through asset that converts the helix-js type to JS. Needed when using the plugin
+ * standalone (i.e, w/o helix cli).
  */
-function pre(payload) {
-  const myPayload = JSON.parse(JSON.stringify(payload));
-  payload.resource.foo = 'testing - should be ignored';
+class HelixJSAsset extends Asset {
+  constructor(name, options) {
+    super(name, options);
+    this.type = 'js';
+  }
 
-  myPayload.resource.foo = 'bar';
-  return myPayload;
+  generate() {
+    return [{
+      type: 'js',
+      value: this.contents,
+    }];
+  }
 }
 
-module.exports.pre = pre;
+module.exports = HelixJSAsset;

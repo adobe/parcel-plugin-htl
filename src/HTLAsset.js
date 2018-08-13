@@ -11,63 +11,29 @@
  */
 const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
-const JSAsset = require('parcel-bundler/src/assets/JSAsset');
-const fs = require('fs');
-const path = require('path');
-const logger = require('parcel-bundler/src/Logger');
-const resolver = require('./resolver');
+const Asset = require('parcel-bundler/src/Asset');
 
-const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
-
-class HTLAsset extends JSAsset {
+class HTLAsset extends Asset {
   constructor(name, options) {
     super(name, options);
     this.type = 'js';
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async parse(code) {
-    // TODO
     const compiler = new Compiler()
       .withOutputDirectory('')
       .includeRuntime(true)
       .withRuntimeGlobalName('it');
 
-    this.contents = compiler.compileToString(code);
-
-    const rootname = this.name.replace(/\.[^.]+$/, '');
-
-    const extension = resolver.extension(this.basename);
-
-    const pipe = this.getPreprocessor(
-      `${rootname}.pipe.js`,
-      `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`,
-    );
-    const pre = this.getPreprocessor(
-      `${rootname}.pre.js`,
-      `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`,
-    );
-
-    let body = fs.readFileSync(path.join(__dirname, 'OutputTemplate.js'), 'utf-8');
-    body = body.replace(/^\s*\/\/\s*CONTENTS\s*$/m, `\n${this.contents}`);
-    body = body.replace(/MOD_PIPE/, pipe);
-    body = body.replace(/MOD_PRE/, pre);
-    return super.parse(body);
+    return compiler.compileToString(code);
   }
 
-  getPreprocessor(name, fallback) {
-    if (fs.existsSync(name)) {
-      const relname = path.relative(this.name, name).substr(1);
-      return relname;
-    }
-    try {
-      if (require.resolve(fallback)) {
-        return fallback;
-      }
-    } catch (e) {
-      logger.log(`${fallback} cannot be found, using default pipeline`);
-    }
-
-    return DEFAULT_PIPELINE;
+  generate() {
+    return [{
+      type: 'helix-js',
+      value: this.ast,
+    }];
   }
 }
 
