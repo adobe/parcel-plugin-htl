@@ -43,7 +43,7 @@ jobs:
         command: git config --global user.email "you@example.com" && git config --global user.name "CircleCi Build"
     - run:
         name: Running Tests
-        command: npx mocha --reporter mocha-junit-reporter
+        command: npx mocha test/unit --exit --reporter mocha-junit-reporter
         environment:
           MOCHA_FILE: junit/test-results.xml
         when: always
@@ -52,7 +52,7 @@ jobs:
     # get code coverage
     - run:
         name: Getting Code Coverage
-        command: npx istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec && npx codecov
+        command: npx istanbul cover ./node_modules/mocha/bin/_mocha test/unit -- --exit -R spec && npx codecov
         environment:
           MOCHA_FILE: junit/test-results.xml
         when: always
@@ -79,7 +79,7 @@ jobs:
 
     - add_ssh_keys:
         fingerprints:
-        - "c3:cc:4e:ec:21:9b:64:b5:61:fb:ba:61:62:cf:62:96"
+        - "45:a8:94:3d:a9:dc:cf:dd:ac:3a:9a:d3:18:c8:ea:dc"
 
     - run:
         name: prepare test git user
