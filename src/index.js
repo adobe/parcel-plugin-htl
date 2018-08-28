@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 module.exports = (bundler) => {
-  // register our HTL handler that pre-processes the HTL which resolves static references
-  bundler.addAssetType('htl', require.resolve('./HTLPreAsset.js'));
-
-  // register our HTL-processed handler, that compiles the HTL into the JS function.
-  bundler.addAssetType('htl-processed', require.resolve('./HTLAsset.js'));
+  // process HTL files by .htl extension
+  bundler.addAssetType('htl', require.resolve('./HTLAsset'));
+  // do not re-register asset if already defined.
+  if (!bundler.parser.extensions['.helix-js']) {
+    bundler.addAssetType('helix-js', require.resolve('./HelixJSAsset'));
+  }
 };

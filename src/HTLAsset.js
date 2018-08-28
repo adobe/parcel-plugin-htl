@@ -12,12 +12,6 @@
 const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
 const Asset = require('parcel-bundler/src/Asset');
-const fs = require('fs');
-const path = require('path');
-const logger = require('parcel-bundler/src/Logger');
-const resolver = require('./resolver');
-
-const DEFAULT_PIPELINE = '@adobe/hypermedia-pipeline/src/defaults/default.js';
 
 class HTLAsset extends Asset {
   constructor(name, options) {
@@ -25,51 +19,22 @@ class HTLAsset extends Asset {
     this.type = 'js';
   }
 
-  async generate() {
+  // eslint-disable-next-line class-methods-use-this
+  async parse(code) {
     const compiler = new Compiler()
       .withOutputDirectory('')
       .includeRuntime(true)
       .withRuntimeGlobalName('it');
 
-    const code = compiler.compileToString(this.contents);
-    const rootname = this.name.replace(/\.[^.]+$/, '');
-    const extension = resolver.extension(this.basename);
+    return compiler.compileToString(code);
+  }
 
-    const pipe = this.getPreprocessor(
-      `${rootname}.pipe.js`,
-      `@adobe/hypermedia-pipeline/src/defaults/${extension}.pipe.js`,
-    );
-    const pre = this.getPreprocessor(
-      `${rootname}.pre.js`,
-      `@adobe/hypermedia-pipeline/src/defaults/${extension}.pre.js`,
-    );
-
-    let body = fs.readFileSync(path.join(__dirname, 'OutputTemplate.js'), 'utf-8');
-    body = body.replace(/^\s*\/\/\s*CONTENTS\s*$/m, `\n${code}`);
-    body = body.replace(/MOD_PIPE/, pipe);
-    body = body.replace(/MOD_PRE/, pre);
+  generate() {
     return [{
-      type: 'js',
-      value: body,
+      type: 'helix-js',
+      value: this.ast,
     }];
   }
-
-  getPreprocessor(name, fallback) {
-    if (fs.existsSync(name)) {
-      const relname = path.relative(this.name, name).substr(1);
-      return relname;
-    }
-    try {
-      if (require.resolve(fallback)) {
-        return fallback;
-      }
-    } catch (e) {
-      logger.log(`${fallback} cannot be found, using default pipeline`);
-    }
-
-    return DEFAULT_PIPELINE;
-  }
-
 }
 
 module.exports = HTLAsset;

@@ -9,20 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-// eslint-disable-next-line no-unused-vars
-function foo() {
-  return 'bar';
+
+
+const Asset = require('parcel-bundler/src/Asset');
+
+/**
+ * Simple pass-through asset that converts the helix-js type to JS. Needed when using the plugin
+ * standalone (i.e, w/o helix cli).
+ */
+class HelixJSAsset extends Asset {
+  constructor(name, options) {
+    super(name, options);
+    this.type = 'js';
+  }
+
+  generate() {
+    return [{
+      type: 'js',
+      value: this.contents,
+    }];
+  }
 }
 
-// the most compact way to write a pre.js:
-//
-// module.exports.pre is a function (taking next as an argument)
-// that returns a function (with payload, secrets, logger as arguments)
-// that calls next (after modifying the payload a bit)
-module.exports.pre = next => (payload, secrets, logger) => {
-  const mypayload = Object.assign({}, payload);
-
-  mypayload.resource.foo = foo();
-
-  return next(mypayload, secrets, logger);
-};
+module.exports = HelixJSAsset;
