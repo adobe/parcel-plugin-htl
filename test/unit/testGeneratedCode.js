@@ -12,6 +12,7 @@
 /* eslint-env mocha */
 const assert = require('assert');
 const Bundler = require('parcel-bundler');
+const md5 = require('parcel-bundler/src/utils/md5');
 const fs = require('fs-extra');
 const path = require('path');
 const Plugin = require('../../src/index.js');
@@ -39,8 +40,9 @@ const TEST_SCRIPTS = [
 
 describe('Generated Code Tests', () => {
   TEST_SCRIPTS.forEach((testScript) => {
+    const cssName = `bla.${md5(path.resolve(__dirname, '../example/bla.css')).slice(-8)}.css`;
     const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
-    const DIST_HTML_CSS = path.resolve(__dirname, '../example/dist/bla.9bd3d28d.css');
+    const DIST_HTML_CSS = path.resolve(__dirname, `../example/dist/${cssName}`);
     const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
 
     describe(`Testing ${testScript}`, () => {
@@ -83,7 +85,7 @@ describe('Generated Code Tests', () => {
         assert.ok(res.body, 'response has no body');
         assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
         assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
-        assert.ok(res.body.match(/bla.9bd3d28d.css/), 'response body does not link rewrite');
+        assert.ok(res.body.match(cssName), 'response body does not link rewrite');
       });
     });
   });
