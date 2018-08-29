@@ -40,6 +40,7 @@ const TEST_SCRIPTS = [
 describe('Generated Code Tests', () => {
   TEST_SCRIPTS.forEach((testScript) => {
     const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
+    const DIST_HTML_CSS = path.resolve(__dirname, '../example/dist/bla.9bd3d28d.css');
     const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
 
     describe(`Testing ${testScript}`, () => {
@@ -53,6 +54,7 @@ describe('Generated Code Tests', () => {
 
       it('correct output files have been generated', () => {
         assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
+        assert.ok(fs.existsSync(DIST_HTML_CSS), 'css file was not generated');
         assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
       });
 
@@ -81,6 +83,7 @@ describe('Generated Code Tests', () => {
         assert.ok(res.body, 'response has no body');
         assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
         assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
+        assert.ok(res.body.match(/bla.9bd3d28d.css/), 'response body does not link rewrite');
       });
     });
   });

@@ -11,10 +11,13 @@
  */
 const HTMLAsset = require('parcel-bundler/src/assets/HTMLAsset');
 
+/**
+ * Parcel asset that pre-processes the HTL like HTML and rewrites static links.
+ */
 class HTLPreAsset extends HTMLAsset {
   constructor(name, options) {
     super(name, options);
-    this.type = 'htl-processed';
+    this.type = 'js';
   }
 
   addURLDependency(url, from = this.name, opts) {
@@ -25,16 +28,24 @@ class HTLPreAsset extends HTMLAsset {
     return super.addURLDependency(url, from, opts);
   }
 
-  async postProcess(generated) {
-    const v = await super.postProcess(generated);
-    v[0].type = 'htl-processed';
-    return v;
+  async generate() {
+    // we post-process already here, so we can cascade the JS processing
+    const generated = await super.generate();
+    let processed = await super.postProcess(generated);
+    // change type to delegate to 2nd plugin
+    if (typeof processed === 'string') {
+      processed = [{
+        value: processed,
+      }];
+    }
+    processed[0].type = 'htl-preprocessed';
+    return processed;
   }
 
-  generateBundleName() {
-    // use 'js' as extension in order to generate correct file name
-    const b = super.generateBundleName();
-    return `${b}.js`;
+  // eslint-disable-next-line class-methods-use-this
+  async postProcess(generated) {
+    // ignore post processing of super class
+    return generated;
   }
 }
 

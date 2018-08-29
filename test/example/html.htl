@@ -7,10 +7,10 @@
 <head>
     <title>Test</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" src="bla.css">
-    <link rel="stylesheet" src="bla.css"/>
+    <link rel="stylesheet" href="bla.css">
+    <link rel="stylesheet" href="bla.css"/>
 </head>
 <body>
-    Hello, world! this is a ${it.resource.title}. 
+    Hello, world! this is a ${it.resource.title}.
 </body>
 </html>

@@ -13,6 +13,9 @@ const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
 const Asset = require('parcel-bundler/src/Asset');
 
+/**
+ * Parcel asset that compiles the HTL script into a javascript function.
+ */
 class HTLAsset extends Asset {
   constructor(name, options) {
     super(name, options);

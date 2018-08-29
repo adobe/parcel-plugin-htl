@@ -2,3 +2,4 @@ dist
 test/example/dist
 test/integration/node_modules
 test/integration/dist
+coverage
