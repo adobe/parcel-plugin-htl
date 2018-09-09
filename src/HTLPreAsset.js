@@ -11,6 +11,10 @@
  */
 const HTMLAsset = require('parcel-bundler/src/assets/HTMLAsset');
 
+function isVariable(path) {
+  return path.indexOf('${') >= 0;
+}
+
 /**
  * Parcel asset that pre-processes the HTL like HTML and rewrites static links.
  */
@@ -26,6 +30,13 @@ class HTLPreAsset extends HTMLAsset {
       return url;
     }
     return super.addURLDependency(url, from, opts);
+  }
+
+  processSingleDependency(path, opts) {
+    if (isVariable(path)) {
+      return path;
+    }
+    return super.processSingleDependency(path, opts);
   }
 
   async generate() {
