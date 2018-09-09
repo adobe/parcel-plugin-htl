@@ -80,6 +80,7 @@ describe('Generated Code Tests', () => {
           resource: {
             title: 'bar',
             path: '/index',
+            style: 'green',
           },
         });
         assert.ok(res, 'no response received');
@@ -89,6 +90,7 @@ describe('Generated Code Tests', () => {
         assert.ok(res.body.match(cssName), 'response body does not link rewrite');
         assert.ok(res.body.match('/foo.css'), 'response body does contain the absolute path reference');
         assert.ok(res.body.match('/index.logo.png'), 'response body does contain the image reference');
+        assert.ok(res.body.match('icon.green.png'), 'response body does contain the image reference');
       });
     });
   });

@@ -12,7 +12,7 @@
 const HTMLAsset = require('parcel-bundler/src/assets/HTMLAsset');
 
 function isVariable(path) {
-  return (path[0] === '$');
+  return path.indexOf('${') >= 0;
 }
 
 /**

@@ -14,5 +14,6 @@
 <body>
     Hello, world! this is a ${it.resource.title}.
     <img src="${it.resource.path}.logo.png">
+    <img src="icon.${it.resource.style}.png">
 </body>
 </html>
