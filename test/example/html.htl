@@ -9,8 +9,10 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="bla.css">
     <link rel="stylesheet" href="bla.css"/>
+    <link rel="stylesheet" href="/foo.css">
 </head>
 <body>
     Hello, world! this is a ${it.resource.title}.
+    <img src="${it.resource.path}.logo.png">
 </body>
 </html>
