@@ -27,7 +27,9 @@ class HTLAsset extends Asset {
     const compiler = new Compiler()
       .withOutputDirectory('')
       .includeRuntime(true)
-      .withRuntimeGlobalName('it');
+      .withRuntimeVar('resource')
+      .withRuntimeVar('request')
+      .withRuntimeGlobalName('payload');
 
     return compiler.compileToString(code);
   }
