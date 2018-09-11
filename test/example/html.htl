@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="/foo.css">
 </head>
 <body>
-    Hello, world! this is a ${resource.title}.
-    <img src="${resource.path}.logo.png">
-    <img src="icon.${resource.style}.png">
+    Hello, world! this is a ${content.title}.
+    <img src="${content.path}.logo.png">
+    <img src="icon.${content.style}.png">
 </body>
 </html>

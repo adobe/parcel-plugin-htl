@@ -77,7 +77,7 @@ describe('Generated Code Tests', () => {
         // eslint-disable-next-line import/no-dynamic-require,global-require
         const script = require(DIST_HTML_JS);
         const res = await script.main({
-          resource: {
+          content: {
             title: 'bar',
             path: '/index',
             style: 'green',
