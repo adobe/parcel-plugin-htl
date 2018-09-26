@@ -16,9 +16,9 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@adobe/htlengine": "^1.0.2-SNAPSHOT.26",
+    "@adobe/htlengine": "^1.0.3",
     "logform": "^1.9.1",
-    "parcel-bundler": "^1.9.7",
+    "parcel-bundler": "^1.10.0",
     "snyk": "^1.88.1"
   },
   "devDependencies": {
