@@ -42,6 +42,7 @@ describe('Generated Code Tests', () => {
     const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
     const DIST_HTML_CSS = path.resolve(__dirname, '../example/dist/bla.d80072a5.css');
     const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
+    const DIST_HTML_MAP = path.resolve(__dirname, `../example/dist/${testScript}.map`);
 
     describe(`Testing ${testScript}`, () => {
       before(`Run Parcel programmatically on ${testScript}.htl`, async () => {
@@ -56,6 +57,7 @@ describe('Generated Code Tests', () => {
         assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
         assert.ok(fs.existsSync(DIST_HTML_CSS), 'css file was not generated');
         assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
+        assert.ok(fs.existsSync(DIST_HTML_MAP), 'map file has been generated');
       });
 
       it('script can be required', () => {
