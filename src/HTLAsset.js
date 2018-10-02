@@ -29,15 +29,22 @@ class HTLAsset extends Asset {
       .includeRuntime(true)
       .withRuntimeVar('content')
       .withRuntimeVar('request')
-      .withRuntimeGlobalName('payload');
+      .withRuntimeGlobalName('payload')
+      .withSourceMap(true);
 
-    return compiler.compileToString(code);
+    return compiler.compile(code);
   }
 
   generate() {
+    const { template, sourceMap } = this.ast;
+    if (sourceMap) {
+      sourceMap.sources = [this.relativeName];
+      sourceMap.sourcesContent = [this.contents];
+    }
     return [{
       type: 'helix-js',
-      value: this.ast,
+      value: template,
+      sourceMap,
     }];
   }
 }
