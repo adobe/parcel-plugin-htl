@@ -21,12 +21,16 @@ class HelixJSAsset extends Asset {
   constructor(name, options) {
     super(name, options);
     this.type = 'js';
+
+    this.rendition = options.rendition;
+    this.sourceMap = this.rendition ? this.rendition.sourceMap : null;
   }
 
   generate() {
     return [{
       type: 'js',
       value: this.contents,
+      sourceMap: this.sourceMap,
     }];
   }
 }
