@@ -39,7 +39,7 @@ const TEST_SCRIPTS = [
 
 describe('Generated Code Tests', function suite() {
   this.timeout(10000);
-  
+
   TEST_SCRIPTS.forEach((testScript) => {
     const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
     const DIST_HTML_CSS = path.resolve(__dirname, '../example/dist/bla.d80072a5.css');

@@ -5,8 +5,8 @@
   "description": "Compiles HTL templates to JS functions",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha --exit test/unit",
-    "lint": "./node_modules/.bin/eslint .",
+    "test": "mocha --exit test/unit && npm run lint",
+    "lint": "eslint .",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect",
     "preversion": "npm test",
