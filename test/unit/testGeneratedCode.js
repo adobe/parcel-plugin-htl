@@ -42,7 +42,6 @@ describe('Generated Code Tests', function suite() {
 
   TEST_SCRIPTS.forEach((testScript) => {
     const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
-    const DIST_HTML_CSS = path.resolve(__dirname, '../example/dist/bla.d80072a5.css');
     const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
     const DIST_HTML_MAP = path.resolve(__dirname, `../example/dist/${testScript}.map`);
 
@@ -57,7 +56,6 @@ describe('Generated Code Tests', function suite() {
 
       it('correct output files have been generated', () => {
         assert.ok(fs.existsSync(DIST_HTML_JS), 'output file has been generated');
-        assert.ok(fs.existsSync(DIST_HTML_CSS), 'css file was not generated');
         assert.ok(!fs.existsSync(DIST_HTML_HTL), 'input file has been passed through');
         assert.ok(fs.existsSync(DIST_HTML_MAP), 'map file has been generated');
       });
@@ -89,7 +87,7 @@ describe('Generated Code Tests', function suite() {
         assert.ok(res.body, 'response has no body');
         assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
         assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
-        assert.ok(res.body.match('bla.d80072a5.css'), 'response body does not link rewrite');
+        assert.ok(res.body.match('bla.css'), 'response body does not link rewrite');
         assert.ok(res.body.match('/foo.css'), 'response body does contain the absolute path reference');
         assert.ok(res.body.match('/index.logo.png'), 'response body does contain the image reference');
         assert.ok(res.body.match('icon.green.png'), 'response body does contain the image reference');
