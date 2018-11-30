@@ -9,8 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 
+const fs = require('fs-extra');
+const path = require('path');
+const Compiler = require('@adobe/htlengine/src/compiler/Compiler');
 const Asset = require('parcel-bundler/src/Asset');
 
 /**
@@ -24,12 +26,14 @@ class HTLAsset extends Asset {
 
   // eslint-disable-next-line class-methods-use-this
   async parse(code) {
+    const template = await fs.readFile(path.resolve(__dirname, 'engine', 'RuntimeTemplate.js'), 'utf-8');
     const compiler = new Compiler()
       .withOutputDirectory('')
       .includeRuntime(true)
       .withRuntimeVar('content')
       .withRuntimeVar('request')
       .withRuntimeGlobalName('payload')
+      .withCodeTemplate(template)
       .withSourceMap(true);
 
     return compiler.compile(code);

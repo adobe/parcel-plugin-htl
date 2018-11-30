@@ -83,14 +83,15 @@ describe('Generated Code Tests', function suite() {
             style: 'green',
           },
         });
-        assert.ok(res, 'no response received');
-        assert.ok(res.body, 'response has no body');
-        assert.ok(res.body.match(/Hello, world/), 'response body does not contain expected result');
-        assert.ok(res.body.match(/this is a bar/), 'response body does not contain expected result from pre.js');
-        assert.ok(res.body.match('bla.css'), 'response body does not link rewrite');
-        assert.ok(res.body.match('/foo.css'), 'response body does contain the absolute path reference');
-        assert.ok(res.body.match('/index.logo.png'), 'response body does contain the image reference');
-        assert.ok(res.body.match('icon.green.png'), 'response body does contain the image reference');
+        assert.ok(res, 'return value received');
+        assert.ok(res.response, 'return value has a response');
+        assert.ok(res.response.body, 'response has body');
+        assert.ok(res.response.body.match(/Hello, world/), 'response body does contain expected result');
+        assert.ok(res.response.body.match(/this is a bar/), 'response body does contain expected result from pre.js');
+        assert.ok(res.response.body.match('bla.css'), 'response body does link rewrite');
+        assert.ok(res.response.body.match('/foo.css'), 'response body does contain the absolute path reference');
+        assert.ok(res.response.body.match('/index.logo.png'), 'response body does contain the image reference');
+        assert.ok(res.response.body.match('icon.green.png'), 'response body does contain the image reference');
       });
     });
   });
