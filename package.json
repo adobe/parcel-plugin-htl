@@ -20,7 +20,7 @@
     "fs-extra": "^7.0.1",
     "logform": "^2.0.0",
     "parcel-bundler": "^1.10.0",
-    "snyk": "^1.88.1"
+    "snyk": "^1.124.1"
   },
   "devDependencies": {
     "ajv": "^6.5.3",
