@@ -43,7 +43,7 @@ describe('Generated Code Tests', function suite() {
   TEST_SCRIPTS.forEach((testScript) => {
     const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
     const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
-    const DIST_HTML_MAP = path.resolve(__dirname, `../example/dist/${testScript}.map`);
+    const DIST_HTML_MAP = path.resolve(__dirname, `../example/dist/${testScript}.js.map`);
 
     describe(`Testing ${testScript}`, () => {
       before(`Run Parcel programmatically on ${testScript}.htl`, async () => {
