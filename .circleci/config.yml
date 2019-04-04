@@ -1,6 +1,6 @@
 version: 2.1
 executors:
-  node8:
+  node10:
     docker:
     - image: circleci/node:dubnium
       environment:
@@ -28,12 +28,9 @@ commands:
         name: prepare test git user
         command: git config --global user.email "circleci@example.com" && git config --global user.name "CircleCi Build"
 
-orbs:
-    helix-smoke-tests: adobe/helix-smoke-tests@0.0.7
-
 jobs:
   build:
-    executor: node8
+    executor: node10
 
     steps:
     - setup
@@ -56,8 +53,8 @@ jobs:
     - store_artifacts:
         path: junit
 
-  publish-pre-release:
-    executor: node8
+  semantic-release:
+    executor: node10
 
     steps:
     - setup
