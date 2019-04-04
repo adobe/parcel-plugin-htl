@@ -1,0 +1,13 @@
+.circleci
+.eslint*
+.github
+.gitignore
+.nyc_output
+.snyk
+.vscode
+.idea
+.releaserc.js
+coverage
+pipeline.log
+test-results.xml
+test

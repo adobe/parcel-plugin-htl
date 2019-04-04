@@ -9,15 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 /* eslint-env mocha */
 const assert = require('assert');
 const Bundler = require('parcel-bundler');
 const fs = require('fs-extra');
 const path = require('path');
-const Plugin = require('../../src/index.js');
+const Plugin = require('../src/index.js');
 
 const BUNDLER_OPTIONS = {
-  outDir: path.resolve(__dirname, '../example/dist'), // The out directory to put the build files in, defaults to dist
+  outDir: path.resolve(__dirname, 'example/dist'), // The out directory to put the build files in, defaults to dist
   watch: false, // whether to watch the files and rebuild them on change, defaults to
   // process.env.NODE_ENV !== 'production'
   cache: false, // Enabled or disables caching, defaults to true
@@ -29,7 +30,7 @@ const BUNDLER_OPTIONS = {
   // minified builds yet)
   detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times,
   // defaults to false, reports are only printed if watch is disabled
-  rootDir: path.resolve(__dirname, '../example'),
+  rootDir: path.resolve(__dirname, 'example'),
   killWorkers: true,
 };
 
@@ -41,14 +42,14 @@ describe('Generated Code Tests', function suite() {
   this.timeout(10000);
 
   TEST_SCRIPTS.forEach((testScript) => {
-    const DIST_HTML_JS = path.resolve(__dirname, `../example/dist/${testScript}.js`);
-    const DIST_HTML_HTL = path.resolve(__dirname, `../example/dist/${testScript}.htl`);
-    const DIST_HTML_MAP = path.resolve(__dirname, `../example/dist/${testScript}.js.map`);
+    const DIST_HTML_JS = path.resolve(__dirname, `example/dist/${testScript}.js`);
+    const DIST_HTML_HTL = path.resolve(__dirname, `example/dist/${testScript}.htl`);
+    const DIST_HTML_MAP = path.resolve(__dirname, `example/dist/${testScript}.js.map`);
 
     describe(`Testing ${testScript}`, () => {
       before(`Run Parcel programmatically on ${testScript}.htl`, async () => {
-        await fs.remove(path.resolve(__dirname, '../example/dist'));
-        const bundler = new Bundler(path.resolve(__dirname, `../example/${testScript}.htl`), BUNDLER_OPTIONS);
+        await fs.remove(path.resolve(__dirname, 'example/dist'));
+        const bundler = new Bundler(path.resolve(__dirname, `example/${testScript}.htl`), BUNDLER_OPTIONS);
         Plugin(bundler);
         await bundler.bundle();
         delete require.cache[require.resolve(DIST_HTML_JS)];
