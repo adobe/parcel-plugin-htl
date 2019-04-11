@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.2...v2.1.3) (2019-04-11)
+
+
+### Bug Fixes
+
+* **template:** use proper runtime template for new htlenginre ([9605fa6](https://github.com/adobe/parcel-plugin-htl/commit/9605fa6))
+
 ## [2.1.2](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.1...v2.1.2) (2019-04-11)
 
 
