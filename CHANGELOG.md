@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.1...v2.1.2) (2019-04-11)
+
+
+### Bug Fixes
+
+* package.json & package-lock.json to reduce vulnerabilities ([#58](https://github.com/adobe/parcel-plugin-htl/issues/58)) ([2878083](https://github.com/adobe/parcel-plugin-htl/commit/2878083))
+
 ## [2.1.1](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.0...v2.1.1) (2019-04-04)
 
 
