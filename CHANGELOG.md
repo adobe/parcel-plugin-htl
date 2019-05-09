@@ -1,3 +1,10 @@
+## [2.1.6](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.5...v2.1.6) (2019-05-09)
+
+
+### Bug Fixes
+
+* **package:** update @adobe/htlengine to version 2.2.0 ([b7cba5a](https://github.com/adobe/parcel-plugin-htl/commit/b7cba5a))
+
 ## [2.1.5](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.4...v2.1.5) (2019-05-08)
 
 
