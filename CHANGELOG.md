@@ -1,3 +1,10 @@
+## [2.1.9](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.8...v2.1.9) (2019-05-13)
+
+
+### Bug Fixes
+
+* **compiler:** clean up global object ([5e9ad59](https://github.com/adobe/parcel-plugin-htl/commit/5e9ad59))
+
 ## [2.1.8](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.7...v2.1.8) (2019-05-13)
 
 
