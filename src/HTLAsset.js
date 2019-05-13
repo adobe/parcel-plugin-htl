@@ -32,7 +32,9 @@ class HTLAsset extends Asset {
       .includeRuntime(true)
       .withRuntimeVar('content')
       .withRuntimeVar('request')
-      .withRuntimeGlobalName('payload')
+      .withRuntimeVar('context')
+      .withRuntimeVar('payload')
+      .withRuntimeGlobalName('global')
       .withCodeTemplate(template)
       .withSourceMap(true);
 

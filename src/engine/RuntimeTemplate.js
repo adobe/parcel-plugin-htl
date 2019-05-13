@@ -36,9 +36,17 @@ function run(runtime) {
   });
 }
 
-module.exports.main = async function main(resource) {
+module.exports.main = async function main(context) {
+  const global = Object.assign({}, context);
+  global.payload = new Proxy(global, {
+      get: function(obj, prop) {
+        process.emitWarning(`payload.${prop}: The use of the global 'payload' variable is deprecated in HTL. use 'context.${prop}' instead.`);
+        return obj[prop];
+      },
+  });
+  global.context = context;
   const runtime = new Runtime();
-  runtime.setGlobal(resource);
+  runtime.setGlobal(global);
   await run(runtime);
   return {
     response: {
