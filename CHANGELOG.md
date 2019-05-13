@@ -1,3 +1,10 @@
+## [2.1.8](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.7...v2.1.8) (2019-05-13)
+
+
+### Bug Fixes
+
+* **package:** update fs-extra to version 8.0.0 ([4d9cc13](https://github.com/adobe/parcel-plugin-htl/commit/4d9cc13))
+
 ## [2.1.7](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.6...v2.1.7) (2019-05-09)
 
 
