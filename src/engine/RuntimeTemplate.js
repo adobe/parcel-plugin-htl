@@ -16,7 +16,6 @@ const { Runtime } = require('MOD_HTLENGINE');
 function run(runtime) {
   const $ = {
     lengthOf: c => Array.isArray(c) ? c.length : Object.keys(c).length,
-    out: runtime.out.bind(runtime),
     exec: runtime.exec.bind(runtime),
     xss: runtime.xss.bind(runtime),
     listInfo: runtime.listInfo.bind(runtime),
@@ -24,6 +23,7 @@ function run(runtime) {
     slyResource: runtime.resource.bind(runtime),
     call: runtime.call.bind(runtime),
     template: runtime.template.bind(runtime),
+    dom: runtime.dom,
   };
 
   // TEMPLATES
@@ -47,10 +47,8 @@ module.exports.main = async function main(context) {
   global.context = context;
   const runtime = new Runtime();
   runtime.setGlobal(global);
-  await run(runtime);
-  return {
-    response: {
-      body: runtime.stream,
-    },
-  };
+  if (context.content && context.content.document && context.content.document.implementation) {
+    runtime.withDomFactory(new Runtime.VDOMFactory(context.content.document.implementation));
+  }
+  return await run(runtime);
 };
