@@ -1,3 +1,16 @@
+# [2.2.0](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.11...v2.2.0) (2019-06-06)
+
+
+### Bug Fixes
+
+* **package:** update @adobe/htlengine to version 3.1.0 ([a03f47c](https://github.com/adobe/parcel-plugin-htl/commit/a03f47c))
+
+
+### Features
+
+* **htl:** disable markup context by default ([ee8e0a9](https://github.com/adobe/parcel-plugin-htl/commit/ee8e0a9)), closes [#79](https://github.com/adobe/parcel-plugin-htl/issues/79)
+* **htl:** enable dom support ([bc23a42](https://github.com/adobe/parcel-plugin-htl/commit/bc23a42)), closes [#76](https://github.com/adobe/parcel-plugin-htl/issues/76)
+
 ## [2.1.11](https://github.com/adobe/parcel-plugin-htl/compare/v2.1.10...v2.1.11) (2019-06-05)
 
 
