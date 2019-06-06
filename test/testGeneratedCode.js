@@ -82,6 +82,7 @@ describe('Generated Code Tests', function suite() {
             title: 'bar',
             path: '/index',
             style: 'green',
+            script: '<script>alert(\'hello\');</script>',
           },
         });
         assert.ok(res, 'return value received');
@@ -91,6 +92,7 @@ describe('Generated Code Tests', function suite() {
         assert.ok(res.match('/foo.css'), 'response body does contain the absolute path reference');
         assert.ok(res.match('/index.logo.png'), 'response body does contain the image reference');
         assert.ok(res.match('icon.green.png'), 'response body does contain the image reference');
+        assert.ok(res.match('<script>'), 'response body does the script tag');
       });
     });
   });
