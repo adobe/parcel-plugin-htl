@@ -36,6 +36,7 @@ class HTLAsset extends Asset {
       .withRuntimeVar('payload')
       .withRuntimeGlobalName('global')
       .withCodeTemplate(template)
+      .withDefaultMarkupContext(null)
       .withSourceMap(true);
 
     return compiler.compile(code);

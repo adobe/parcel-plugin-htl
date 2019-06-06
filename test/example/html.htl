@@ -13,6 +13,7 @@
 </head>
 <body>
     Hello, world! this is a ${content.title}.
+    and here some scripts: ${content.script}.
     <img src="${content.path}.logo.png">
     <img src="icon.${content.style}.png">
 </body>
